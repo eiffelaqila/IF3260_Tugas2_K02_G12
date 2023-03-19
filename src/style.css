@@ -1,0 +1,126 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #323232;
+    border-color: #646464;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.container {
+    background-color: #323232;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.toolbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    background: #323232;
+    height: 100%;
+    border-right: solid 1px;
+    overflow-y: auto;
+    min-width: 35px;
+    padding: 0.5rem;
+}
+
+canvas {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+}
+
+.tool {
+    display: flex;
+    border: 1px solid #646464;
+    width: 100%;
+    justify-content: center;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.properties {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 30vw;
+    border-left: solid 1px;
+    overflow-y: auto;
+}
+
+.properties-groups {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-top: solid 1px #646464;
+    border-bottom: solid 1px #646464;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.properties-title {
+    font-size: 1.5rem;
+    margin: 1rem rem 0rem 1rem 0rem;
+    color: white;
+}
+
+.properties-label {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.properties-input {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: black;
+}
+
+.properties-output {
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.active {
+    background-color: #646464;
+}

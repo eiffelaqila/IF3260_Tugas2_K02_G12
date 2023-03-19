@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <script type="module" src="app/script.js" defer></script>
+
+        <title>Grafkom Blender K02-12</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1 class="title">Grafkom Blender K02-12</h1>
+            </div>
+            <div class="content">
+                <div class="toolbar" id="toolbar">
+                    <div class="tool active" id="tool-object">
+                        <img
+                            src="./icons/object.svg"
+                            width="24"
+                            height="24"
+                            alt="object tool"
+                        />
+                    </div>
+                    <div class="tool" id="tool-projection">
+                        <img
+                            src="./icons/projection.svg"
+                            width="24"
+                            height="24"
+                            alt="projection tool"
+                        />
+                    </div>
+                    <div class="tool" id="tool-file">
+                        <img
+                            src="./icons/file.svg"
+                            width="24"
+                            height="24"
+                            alt="file tool"
+                        />
+                    </div>
+                </div>
+                <div class="canvas">
+                    <canvas id="glcanvas"></canvas>
+                </div>
+                <div class="properties" id="properties">
+                    <div class="properties-section" id="properties-object">
+                        <div class="properties-groups">
+                            <h1 class="properties-title">Object</h1>
+                            <div class="properties-item">
+                                <label for="shape" class="properties-label">
+                                    Shape
+                                </label>
+                                <select id="shape" class="properties-input">
+                                    <option value="kubus">Kubus</option>
+                                    <option value="tetrahedral">
+                                        Tetrahedral
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="properties-groups">
+                            <h1 class="properties-title">Transformation</h1>
+                            <div class="properties-item">
+                                <label for="rotasiX" class="properties-label">
+                                    Rotasi X
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="rotasiX"
+                                    min="-180"
+                                    max="180"
+                                    value="0"
+                                    id="rotasiX"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">0</output>
+                            </div>
+                            <div class="properties-item">
+                                <label for="rotasiY" class="properties-label">
+                                    Rotasi Y
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="rotasiY"
+                                    min="-180"
+                                    max="180"
+                                    value="0"
+                                    id="rotasiY"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">0</output>
+                            </div>
+                            <div class="properties-item">
+                                <label for="rotasiZ" class="properties-label">
+                                    Rotasi Z
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="rotasiZ"
+                                    min="-180"
+                                    max="180"
+                                    value="0"
+                                    id="rotasiZ"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">0</output>
+                            </div>
+                            <div class="properties-item">
+                                <label
+                                    for="translasiX"
+                                    class="properties-label"
+                                >
+                                    Translasi X
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="translasiX"
+                                    min="-500"
+                                    max="500"
+                                    value="0"
+                                    id="translasiX"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">0</output>
+                            </div>
+                            <div class="properties-item">
+                                <label
+                                    for="translasiX"
+                                    class="properties-label"
+                                >
+                                    Translasi Y
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="translasiY"
+                                    min="-500"
+                                    max="500"
+                                    value="0"
+                                    id="translasiY"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">0</output>
+                            </div>
+                            <div class="properties-item">
+                                <label
+                                    for="translasiZ"
+                                    class="properties-label"
+                                >
+                                    Translasi Z
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="translasiZ"
+                                    min="-500"
+                                    max="500"
+                                    value="0"
+                                    id="translasiZ"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">0</output>
+                            </div>
+                            <div class="properties-item">
+                                <label
+                                    for="translasiX"
+                                    class="properties-label"
+                                >
+                                    Scale X
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="scaleX"
+                                    min="0"
+                                    max="5"
+                                    value="1"
+                                    step="0.1"
+                                    id="scaleX"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">1</output>
+                            </div>
+                            <div class="properties-item">
+                                <label for="scaleX" class="properties-label">
+                                    Scale Y
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="scaleY"
+                                    min="0"
+                                    max="5"
+                                    value="1"
+                                    step="0.1"
+                                    id="scaleY"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">1</output>
+                            </div>
+                            <div class="properties-item">
+                                <label for="scaleZ" class="properties-label">
+                                    Scale Z
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="scaleZ"
+                                    min="0"
+                                    max="5"
+                                    value="1"
+                                    step="0.1"
+                                    id="scaleZ"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">1</output>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="properties-section" id="properties-projection">
+                        <div class="properties-groups">
+                            <h1 class="properties-title">Projection</h1>
+                            <div class="properties-item">
+                                <label
+                                    for="projection"
+                                    class="properties-label"
+                                >
+                                    Projection
+                                </label>
+                                <select id="shape" class="properties-input">
+                                    <option value="orthographic">
+                                        Orthographic
+                                    </option>
+                                    <option value="oblique">Oblique</option>
+                                    <option value="perspective">
+                                        Perspective
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="properties-groups">
+                            <h1 class="properties-title">
+                                Camera Configuration
+                            </h1>
+                            <div class="properties-item">
+                                <label for="radius" class="properties-label">
+                                    Radius
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="radius"
+                                    min="0"
+                                    max="1"
+                                    value="0"
+                                    step="0.01"
+                                    id="radius"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">0</output>
+                            </div>
+                            <div class="properties-item">
+                                <label for="sudut" class="properties-label">
+                                    Sudut
+                                </label>
+                                <input
+                                    class="properties-input"
+                                    type="range"
+                                    name="sudut"
+                                    min="0"
+                                    max="360"
+                                    value="0"
+                                    step="1"
+                                    id="sudut"
+                                    oninput="this.nextElementSibling.value = this.value"
+                                />
+                                <output class="properties-output">0</output>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
