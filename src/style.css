@@ -95,29 +95,34 @@ canvas {
 }
 
 .properties-title {
-    font-size: 1.5rem;
+    font-size: 1rem;
     margin: 1rem rem 0rem 1rem 0rem;
     color: white;
 }
 
+.properties-item {
+    display: flex;
+}
+
 .properties-label {
-    font-size: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    font-size: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     color: white;
+    width: 40%;
 }
 
 .properties-input {
-    font-size: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    font-size: 0.5rem;
+    margin: 0.5rem 1rem 0.5rem 0rem;
     color: black;
+    width: 50%;
 }
 
 .properties-output {
-    font-size: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    font-size: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     color: white;
 }
 
