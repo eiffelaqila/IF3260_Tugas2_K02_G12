@@ -23,7 +23,7 @@ const toolbarFunction = (toolItem) => {
         toolItem.html.classList.add("active");
         propertiesToggle("file");
     } else {
-        console.log("Please select a valid button");
+        alert("Please select a valid button");
     }
 };
 

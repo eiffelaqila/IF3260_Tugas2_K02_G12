@@ -59,7 +59,7 @@ body {
 
 canvas {
     height: 100%;
-    width: 100%;
+    width: 60vw;
     background-color: white;
 }
 
@@ -79,7 +79,8 @@ canvas {
     display: flex;
     flex-direction: column;
     justify-content: start;
-    width: 30vw;
+    width: 100%;
+    min-width: 30vw;
     border-left: solid 1px;
     overflow-y: auto;
 }

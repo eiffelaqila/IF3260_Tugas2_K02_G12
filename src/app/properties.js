@@ -10,9 +10,7 @@ class PropItem {
      */
     constructor(name) {
         this.#name = name;
-        console.log(`properties-${name}`);
         this.#html = document.getElementById(`properties-${name}`);
-        console.log(this.#html);
     }
 
     get name() {
