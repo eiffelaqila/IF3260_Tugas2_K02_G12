@@ -1,3 +1,7 @@
+/**
+ * This is a base class for hollow objects used in this repository
+ * @property {Object}
+ */
 class BaseObject {
     // Members of the base class
 
@@ -13,18 +17,13 @@ class BaseObject {
     // Methods of the base class
 
     /**
-     * Create a new instance of the object
-     *
-     * @param {number} num_nodes Number of nodes used to draw hollow object
-     * @param {number} nodes List of nodes used to draw hollow object
-     * @param {number} num_vertices Number of vertices used to draw hollow object
-     * @param {number} vertices List of vertices used to draw hollow object
+     * Make a hollow object
      */
-    constructor(num_nodes = 0, nodes = [], num_vertices = 0, vertices = []) {
-        this.#num_nodes = num_nodes;
-        this.#nodes = nodes;
-        this.#num_vertices = num_vertices;
-        this.#vertices = vertices;
+    constructor(obj) {
+        this.#nodes = obj.nodes ? obj.nodes : [];
+        this.#num_nodes = obj.nodes? obj.nodes.length : 0;
+        this.#vertices = obj.vertices ? obj.vertices : [];
+        this.#num_vertices = obj.vertices? obj.vertices.length : 0;
     }
     /** 
      * Get the number of nodes in the object
@@ -59,29 +58,15 @@ class BaseObject {
         return this.#vertices;
     }
     /**
-     * Set the number of nodes in the object
-     * 
-     * @param {number} num_nodes Nu
- er of nodes in the object    */
-}
-    set num_nodes(num_nodes) {
-        this.#num_nodes = num_nodes;
-    }
-    /**
      * Set the list of nodes in the object
      * 
      * @param {list} nodes List of nodes in the object
      */
     set nodes(nodes) {
-        this.#nodes = nodes;
-    }
-    /**
-     * Set the number of vertices in the object
-     * 
-     * @param {number} num_vertices Number of vertices in the object
-     */
-    set num_vertices(num_vertices) {
-        this.#num_vertices = num_vertices;
+        if (Array.isArray(nodes)) {
+            this.#nodes = nodes;
+            this.#num_nodes = nodes.length;
+        }
     }
     /**
      * Set the list of vertices in the object
@@ -89,6 +74,11 @@ class BaseObject {
      * @param {list} vertices List of vertices in the object
      */
     set vertices(vertices) {
-        this.#vertices = vertices;
+        if (Array.isArray(vertices)) {
+            this.#vertices = vertices;
+            this.#num_vertices = vertices.length;
+        }
     }
-b
+}
+
+export default BaseObject;
