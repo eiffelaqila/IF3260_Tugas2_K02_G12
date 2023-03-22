@@ -18,6 +18,13 @@ const upXOutput = document.getElementById("upX-output");
 const upYOutput = document.getElementById("upY-output");
 const upZOutput = document.getElementById("upZ-output");
 
+const SHADING_ON_TEXT = "Shading (ON)";
+const SHADING_ON_TEXT_COLOR = "rgb(0, 0, 0)";
+const SHADING_ON_BG_COLOR = "rgb(0, 255, 0)";
+const SHADING_OFF_TEXT = "Shading (OFF)";
+const SHADING_OFF_TEXT_COLOR = "rgb(255, 255, 255)";
+const SHADING_OFF_BG_COLOR = "rgb(255, 0, 0)";
+
 // Shape and Projection Selection
 function setShape() {
     console.log("Set shape");
@@ -34,6 +41,23 @@ function saveObject() {
     console.log("Save object");
 }
 
+// Shading
+function changeShadingMode() {
+    const bgColor = window.getComputedStyle(shading).getPropertyValue("background-color");
+    if (bgColor === SHADING_ON_BG_COLOR) {
+        shading.style.backgroundColor = SHADING_OFF_BG_COLOR;
+        shading.style.color = SHADING_OFF_TEXT_COLOR;
+        shading.innerHTML = SHADING_OFF_TEXT
+    } else {
+        shading.style.backgroundColor = SHADING_ON_BG_COLOR;
+        shading.style.color = SHADING_ON_TEXT_COLOR;
+        shading.innerHTML = SHADING_ON_TEXT
+    }
+}
+function getShadingMode() {
+    const bgColor = window.getComputedStyle(shading).getPropertyValue("background-color");
+    return bgColor === SHADING_ON_BG_COLOR;
+}
 // Reset View
 function resetView() {
     console.log("Reset view");
@@ -221,6 +245,8 @@ export {
     setScaleY,
     setScaleZ,
     setProjection,
+    changeShadingMode,
+    getShadingMode,
     resetView,
     setEyeX,
     setEyeY,

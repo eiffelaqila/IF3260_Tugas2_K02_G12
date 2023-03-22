@@ -1,5 +1,6 @@
 import { DefaultFragCode, DefaultVertCode } from "./shaders/DefaultShaders.js";
 import { initBuffers } from "../lib/Buffers.js";
+import { getShadingMode } from "../app/utils.js";
 import {
     create,
     perspective,
@@ -217,6 +218,9 @@ export default class WebGL {
         invert(normalMatrix, modelViewMatrix);
         transpose(normalMatrix, normalMatrix);
 
+        // Set uniform bool u_Shading value for determining shading mode
+        const isShading = getShadingMode();
+
         // Tell WebGL how to pull out the positions from the position
         // buffer into the vertexPosition attribute.
         this.setPositionAttribute(webgl);
@@ -246,6 +250,10 @@ export default class WebGL {
             webgl.programInfo.uniformLocation.normalMatrix,
             false,
             normalMatrix
+        );
+        webgl.gl.uniform1i(
+            webgl.programInfo.uniformLocation.shading,
+            isShading
         );
 
         {
