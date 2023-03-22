@@ -1,6 +1,6 @@
 import { DefaultFragCode, DefaultVertCode } from "./shaders/DefaultShaders.js";
 import { initBuffers } from "../lib/Buffers.js";
-import { getShadingMode } from "../app/utils.js";
+import { isShadingMode } from "../app/utils.js";
 import {
     create,
     perspective,
@@ -219,7 +219,7 @@ export default class WebGL {
         transpose(normalMatrix, normalMatrix);
 
         // Set uniform bool u_Shading value for determining shading mode
-        const isShading = getShadingMode();
+        const isShading = isShadingMode();
 
         // Tell WebGL how to pull out the positions from the position
         // buffer into the vertexPosition attribute.

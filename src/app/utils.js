@@ -43,20 +43,20 @@ function saveObject() {
 
 // Shading
 function changeShadingMode() {
-    const bgColor = window.getComputedStyle(shading).getPropertyValue("background-color");
-    if (bgColor === SHADING_ON_BG_COLOR) {
+    const shadingBtnText = shading.innerText;
+    if (shadingBtnText === SHADING_ON_TEXT) {
+        shading.innerText = SHADING_OFF_TEXT;
         shading.style.backgroundColor = SHADING_OFF_BG_COLOR;
         shading.style.color = SHADING_OFF_TEXT_COLOR;
-        shading.innerHTML = SHADING_OFF_TEXT
     } else {
+        shading.innerText = SHADING_ON_TEXT;
         shading.style.backgroundColor = SHADING_ON_BG_COLOR;
         shading.style.color = SHADING_ON_TEXT_COLOR;
-        shading.innerHTML = SHADING_ON_TEXT
     }
 }
-function getShadingMode() {
-    const bgColor = window.getComputedStyle(shading).getPropertyValue("background-color");
-    return bgColor === SHADING_ON_BG_COLOR;
+function isShadingMode() {
+    const shadingBtnText = shading.innerText;
+    return shadingBtnText === SHADING_ON_TEXT;
 }
 // Reset View
 function resetView() {
@@ -246,7 +246,7 @@ export {
     setScaleZ,
     setProjection,
     changeShadingMode,
-    getShadingMode,
+    isShadingMode,
     resetView,
     setEyeX,
     setEyeY,
