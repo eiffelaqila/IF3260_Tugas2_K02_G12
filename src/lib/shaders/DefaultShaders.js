@@ -32,11 +32,11 @@ const DefaultFragCode = `
     uniform bool u_Shading;
 
     void main(void) {
-    if (u_Shading) {
-        gl_FragColor = vec4(v_Color.rgb * v_Lighting, v_Color.a);
-    } else {
-        gl_FragColor = v_Color;
-    }
+        if (u_Shading) {
+            gl_FragColor = vec4(v_Color.rgb * v_Lighting, v_Color.a);
+        } else {
+            gl_FragColor = v_Color;
+        }
     }
 `;
 
