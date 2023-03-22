@@ -2,7 +2,7 @@
  * This is a base class for hollow objects used in this repository
  * @property {Object}
  */
-class BaseObject {
+class HollowObject {
     // Members of the base class
 
     /** @type {number} Number of nodes used to draw hollow object */
@@ -11,7 +11,7 @@ class BaseObject {
     #nodes;
     /** @type {number} Number of vertices/blocks used to draw hollow object */
     #num_vertices;
-    /** @type {Array} List of vertices/blocks used to draw hollow object */
+    /** @type {{faces: Array, color-type: String, color: Array}[]} List of vertices/blocks used to draw hollow object */
     #vertices;
 
     // Methods of the base class
@@ -21,9 +21,9 @@ class BaseObject {
      */
     constructor(obj) {
         this.#nodes = obj.nodes ? obj.nodes : [];
-        this.#num_nodes = obj.nodes? obj.nodes.length : 0;
+        this.#num_nodes = obj.nodes ? obj.nodes.length : 0;
         this.#vertices = obj.vertices ? obj.vertices : [];
-        this.#num_vertices = obj.vertices? obj.vertices.length : 0;
+        this.#num_vertices = obj.vertices ? obj.vertices.length : 0;
     }
     /** 
      * Get the number of nodes in the object
@@ -81,4 +81,4 @@ class BaseObject {
     }
 }
 
-export default BaseObject;
+export default HollowObject;
