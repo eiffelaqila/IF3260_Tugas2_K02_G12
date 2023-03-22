@@ -85,7 +85,6 @@ class Toolbar {
 export const toolbar = new Toolbar();
 toolbar.add(new ToolItem("object"));
 toolbar.add(new ToolItem("projection"));
-toolbar.add(new ToolItem("file"));
 
 globalThis.app = {
     ...globalThis.app,

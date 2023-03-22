@@ -1,7 +1,5 @@
 * {
     font-family: Arial, Helvetica, sans-serif;
-    color: #323232;
-    border-color: #646464;
 }
 
 html,
@@ -103,6 +101,8 @@ canvas {
 
 .properties-item {
     display: flex;
+    align-items: center;
+    font-weight: bold;
 }
 
 .properties-label {
@@ -129,4 +129,32 @@ canvas {
 
 .active {
     background-color: #646464;
+}
+
+#resetview {
+    background-color: red;
+    color: white;
+}
+
+#load {
+    background-color: paleturquoise;
+    color: black;
+}
+
+#save {
+    background-color: palegreen;
+    color: black;
+}
+
+.button-input {
+    font-weight: bold;
+    padding: 0.5rem 0rem 0.5rem 0rem;
+    width: 30%;
+    border-radius: 0.5rem;
+}
+
+.select-input {
+    font-weight: bold;
+    padding: 0.25rem 0rem 0.25rem 0;
+    border-radius: 0.5rem;
 }
