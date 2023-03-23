@@ -15,6 +15,7 @@ import {
     setScaleY,
     setScaleZ,
     setShadingMode,
+    setAnimationMode,
     resetView,
     setEyeX,
     setEyeY,
@@ -45,6 +46,7 @@ const scaleX = document.getElementById("scaleX");
 const scaleY = document.getElementById("scaleY");
 const scaleZ = document.getElementById("scaleZ");
 const shading = document.getElementById("shading");
+const animation = document.getElementById("animation");
 const resetview = document.getElementById("resetview");
 const eyeX = document.getElementById("eyeX");
 const eyeY = document.getElementById("eyeY");
@@ -76,6 +78,10 @@ function main() {
     function render(now) {
         deltaTime = now * 0.001 - then;
         then = now * 0.001;
+
+        webgl.gl.enable(webgl.gl.DEPTH_TEST);
+        webgl.gl.depthFunc(webgl.gl.LEQUAL);
+        webgl.gl.clear(webgl.gl.COLOR_BUFFER_BIT | webgl.gl.DEPTH_BUFFER_BIT);
 
         for (let i = 0; i < webgl.parsedObject.positions.length; i++) {
             webgl.drawScene(
@@ -115,6 +121,7 @@ function initEventHandler(webgl) {
     scaleY.addEventListener("input", setScaleY);
     scaleZ.addEventListener("input", setScaleZ);
     shading.addEventListener("click", setShadingMode);
+    animation.addEventListener("click", setAnimationMode);
     resetview.addEventListener("click", resetView);
     eyeX.addEventListener("input", setEyeX);
     eyeY.addEventListener("input", setEyeY);

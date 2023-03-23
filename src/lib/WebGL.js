@@ -1,6 +1,6 @@
 import { DefaultFragCode, DefaultVertCode } from "./shaders/DefaultShaders.js";
 import { initBuffers } from "../lib/Buffers.js";
-import { getShadingMode, getProjectionType } from "../app/utils.js";
+import { getShadingMode, getProjectionType, getAnimationMode } from "../app/utils.js";
 import { ortographicProjMat, ortographicProjMat1, ortographicProjMat2 } from "./Mat.js";
 import {
     create,
@@ -193,14 +193,11 @@ export default class WebGL {
      * Draw scene
      * @param {WebGL} webgl
      */
-    drawScene(webgl, buffer, vCount, cubeRotation) {
+    drawScene(webgl, buffer, vCount, cubeRotation, enableAnimation=getAnimationMode()) {
         // console.log(webgl.parsedObject.positions);
         // Clear canvas
         // webgl.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         // webgl.gl.clearDepth(1.0);
-        webgl.gl.enable(webgl.gl.DEPTH_TEST);
-        webgl.gl.depthFunc(webgl.gl.LEQUAL);
-        webgl.gl.clear(webgl.gl.COLOR_BUFFER_BIT | webgl.gl.DEPTH_BUFFER_BIT);
 
         let projectionMatrix;
 
@@ -250,24 +247,26 @@ export default class WebGL {
             [-0.0, 0.0, -6.0]
         ); // amount to translate
 
-        rotate(
-            modelViewMatrix, // destination matrix
-            modelViewMatrix, // matrix to rotate
-            cubeRotation * 0.5, // amount to rotate in radians
-            [0, 0, 1]
-        ); // axis to rotate around (Z)
-        rotate(
-            modelViewMatrix, // destination matrix
-            modelViewMatrix, // matrix to rotate
-            cubeRotation * 0.5, // amount to rotate in radians
-            [0, 1, 0]
-        ); // axis to rotate around (Y)
-        rotate(
-            modelViewMatrix, // destination matrix
-            modelViewMatrix, // matrix to rotate
-            cubeRotation * 0.5, // amount to rotate in radians
-            [1, 0, 0]
-        ); // axis to rotate around (X)
+        if (enableAnimation) {
+            rotate(
+                modelViewMatrix, // destination matrix
+                modelViewMatrix, // matrix to rotate
+                cubeRotation * 0.5, // amount to rotate in radians
+                [0, 0, 1]
+            ); // axis to rotate around (Z)
+            rotate(
+                modelViewMatrix, // destination matrix
+                modelViewMatrix, // matrix to rotate
+                cubeRotation * 0.5, // amount to rotate in radians
+                [0, 1, 0]
+            ); // axis to rotate around (Y)
+            rotate(
+                modelViewMatrix, // destination matrix
+                modelViewMatrix, // matrix to rotate
+                cubeRotation * 0.5, // amount to rotate in radians
+                [1, 0, 0]
+            ); // axis to rotate around (X)
+        }
 
         const normalMatrix = create();
         invert(normalMatrix, modelViewMatrix);
