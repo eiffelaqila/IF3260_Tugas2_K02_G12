@@ -137,14 +137,6 @@ function setProjection() {
     console.log("Set projection");
 }
 
-// Load and save
-function loadObject() {
-    console.log("Load object");
-}
-function saveObject() {
-    console.log("Save object");
-}
-
 // Shading
 function changeShadingMode() {
     const shadingBtnText = shading.innerText;
