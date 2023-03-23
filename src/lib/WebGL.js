@@ -1,6 +1,7 @@
 import { DefaultFragCode, DefaultVertCode } from "./shaders/DefaultShaders.js";
 import { initBuffers } from "../lib/Buffers.js";
 import { getShadingMode, getProjectionType } from "../app/utils.js";
+import { ortographicProjMat, ortographicProjMat1, ortographicProjMat2 } from "./Mat.js";
 import {
     create,
     perspective,
@@ -8,6 +9,7 @@ import {
     rotate,
     invert,
     transpose,
+    ortho,
 } from "./Mat4.js";
 import { parseHollowObject } from "./object/HollowObject.js";
 
@@ -184,34 +186,41 @@ export default class WebGL {
         webgl.gl.depthFunc(webgl.gl.LEQUAL);
         webgl.gl.clear(webgl.gl.COLOR_BUFFER_BIT | webgl.gl.DEPTH_BUFFER_BIT);
 
-        const fieldOfView = (45 * Math.PI) / 180; // in radians
-        const aspect =
-            webgl.gl.canvas.clientWidth / webgl.gl.canvas.clientHeight;
-        const zNear = 0.1;
-        const zFar = 100.0;
-        const projectionMatrix = create();
+        let projectionMatrix;
 
+        // let projectionMatrix = createProjectionMatrix();
+        
         const projectionType = getProjectionType();
-        // if (projectionType === "orthographic") orthographic(projectionMatrix);
-        // else if (projectionType === "oblique") oblique(projectionMatrix);
-        // else perspective(projectionMatrix);
+        if (projectionType === "orthographic") {
+            const left = -1;
+            const right = 1;
+            const bottom = -1;
+            const top = 1;
+            const near = 0.1;
+            const far = 100.0;
+            projectionMatrix = ortographicProjMat(left, right, bottom, top, near, far);
+        }
+        else if (projectionType === "oblique") {
+            const fieldOfView = (45 * Math.PI) / 180; // in radians
+            const aspect =
+                webgl.gl.canvas.clientWidth / webgl.gl.canvas.clientHeight;
+            const zNear = 0.1;
+            const zFar = 100.0;
+            projectionMatrix = create();
+            perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+        }
+        else {
+            const fieldOfView = (45 * Math.PI) / 180; // in radians
+            const aspect =
+                webgl.gl.canvas.clientWidth / webgl.gl.canvas.clientHeight;
+            const zNear = 0.1;
+            const zFar = 100.0;
+            projectionMatrix = create();
+            perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+        }
 
         // note: glmatrix.js always has the first argument
         // as the destination to receive the result.
-        // perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-
-        var left = -1.0;
-        var right = 1.0;
-        var bottom = -1.0;
-        var top = 1.0;
-        var near = 0.1;
-        var far = 100.0;
-        const orthoProjectionMatrix = new Float32Array([
-            2.0 / (right - left), 0, 0, -(right + left) / (right - left),
-            0, 2.0 / (top - bottom), 0, -(top + bottom) / (top - bottom),
-            0, 0, -2.0 / (far - near), -(far + near) / (far - near),
-            0, 0, 0, 1
-          ]);
 
         // Set the drawing position to the "identity" point, which is
         // the center of the scene.
@@ -269,7 +278,7 @@ export default class WebGL {
         webgl.gl.uniformMatrix4fv(
             webgl.programInfo.uniformLocation.projectionMatrix,
             false,
-            orthoProjectionMatrix
+            projectionMatrix
         );
         webgl.gl.uniformMatrix4fv(
             webgl.programInfo.uniformLocation.modelViewMatrix,

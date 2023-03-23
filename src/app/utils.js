@@ -142,8 +142,9 @@ function getProjectionType() {
 // Shading
 /**
  * Listener callback for setting shading mode
+ * @param {HTMLElement} shading
  */
-function setShadingMode() {
+function setShadingMode(shading) {
     const shadingBtnText = shading.innerText;
     if (shadingBtnText === SHADING_ON_TEXT) {
         shading.innerText = SHADING_OFF_TEXT;
