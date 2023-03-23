@@ -142,8 +142,8 @@ canvas {
 }
 
 #load {
-    background-color: paleturquoise;
-    color: black;
+    font-weight: bold;
+    color: white;
 }
 
 #save {
@@ -162,5 +162,13 @@ canvas {
 .select-input {
     font-weight: bold;
     padding: 0.25rem 0rem 0.25rem 0;
+    border-radius: 0.5rem;
+}
+
+#load-info p {
+    font-size: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: indianred;
     border-radius: 0.5rem;
 }

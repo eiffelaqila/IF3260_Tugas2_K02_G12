@@ -60,12 +60,15 @@ main();
 
 // Main function
 function main() {
-    initEventHandler();
     // Get canvas from HTML
     const canvas = document.querySelector("#glcanvas");
 
     // Initialize GL
     const webgl = new WebGL(canvas);
+    initEventHandler(webgl);
+
+    // Initialize object
+    setShape(webgl);
 
     // Draw the scene repeatedly
     let then = 0;
@@ -81,10 +84,20 @@ function main() {
     requestAnimationFrame(render);
 }
 
-function initEventHandler() {
-    shape.addEventListener("change", setShape);
-    load.addEventListener("click", loadObject);
-    save.addEventListener("click", saveObject);
+/**
+ * Initialize event handlers
+ * @param {WebGL} webgl
+ */
+function initEventHandler(webgl) {
+    shape.addEventListener("change", () => {
+        setShape(webgl);
+    });
+    load.addEventListener("change", () => {
+        loadObject(webgl);
+    });
+    save.addEventListener("click", () => {
+        saveObject(webgl);
+    });
     rotasiX.addEventListener("input", setRotasiX);
     rotasiY.addEventListener("input", setRotasiY);
     rotasiZ.addEventListener("input", setRotasiZ);
