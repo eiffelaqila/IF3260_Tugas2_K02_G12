@@ -79,7 +79,14 @@ function main() {
         deltaTime = now * 0.001 - then;
         then = now * 0.001;
 
-        webgl.drawScene(webgl, cubeRotation);
+        for (let i = 0; i < webgl.parsedObject.positions.length; i++) {
+            webgl.drawScene(
+                webgl,
+                webgl.buffer[i],
+                webgl.parsedObject.positions[i].length,
+                cubeRotation
+            );
+        }
         cubeRotation += deltaTime;
         requestAnimationFrame(render);
     }
