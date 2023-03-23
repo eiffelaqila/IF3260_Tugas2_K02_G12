@@ -26,6 +26,7 @@ import {
     setUpY,
     setUpZ,
     changeShadingMode,
+    changeAnimationMode,
 } from "./utils.js";
 import WebGL from "../lib/WebGL.js";
 
@@ -47,6 +48,7 @@ const scaleY = document.getElementById("scaleY");
 const scaleZ = document.getElementById("scaleZ");
 const projection = document.getElementById("projection");
 const shading = document.getElementById("shading");
+const animation = document.getElementById("animation");
 const resetview = document.getElementById("resetview");
 const eyeX = document.getElementById("eyeX");
 const eyeY = document.getElementById("eyeY");
@@ -122,6 +124,7 @@ function initEventHandler(webgl) {
     scaleZ.addEventListener("input", setScaleZ);
     projection.addEventListener("change", setProjection);
     shading.addEventListener("click", changeShadingMode);
+    animation.addEventListener("click", changeAnimationMode);
     resetview.addEventListener("click", resetView);
     eyeX.addEventListener("input", setEyeX);
     eyeY.addEventListener("input", setEyeY);

@@ -30,6 +30,13 @@ const SHADING_OFF_TEXT = "Shading (OFF)";
 const SHADING_OFF_TEXT_COLOR = "rgb(255, 255, 255)";
 const SHADING_OFF_BG_COLOR = "rgb(255, 0, 0)";
 
+const ANIMATION_ON_TEXT = "Animation (ON)";
+const ANIMATION_ON_TEXT_COLOR = "rgb(0, 0, 0)";
+const ANIMATION_ON_BG_COLOR = "rgb(0, 255, 0)";
+const ANIMATION_OFF_TEXT = "Animation (OFF)";
+const ANIMATION_OFF_TEXT_COLOR = "rgb(255, 255, 255)";
+const ANIMATION_OFF_BG_COLOR = "rgb(255, 0, 0)";
+
 // Sample shape
 const sampleShape = {
     nodes: [
@@ -401,6 +408,24 @@ function resetView() {
     console.log("Reset view");
 }
 
+// Animation
+function changeAnimationMode() {
+    const animationBtnText = animation.innerText;
+    if (animationBtnText === ANIMATION_ON_TEXT) {
+        animation.innerText = ANIMATION_OFF_TEXT;
+        animation.style.backgroundColor = ANIMATION_OFF_BG_COLOR;
+        animation.style.color = ANIMATION_OFF_TEXT_COLOR;
+    } else {
+        animation.innerText = ANIMATION_ON_TEXT;
+        animation.style.backgroundColor = ANIMATION_ON_BG_COLOR;
+        animation.style.color = ANIMATION_ON_TEXT_COLOR;
+    }
+}
+function isAnimationMode() {
+    const animationBtnText = animation.innerText;
+    return animationBtnText === ANIMATION_ON_TEXT;
+}
+
 // Object Transformations
 function setRotasiX() {
     let prevValue = rotasiXOutput.value;
@@ -587,6 +612,8 @@ export {
     changeShadingMode,
     isShadingMode,
     resetView,
+    changeAnimationMode,
+    isAnimationMode,
     setEyeX,
     setEyeY,
     setEyeZ,
