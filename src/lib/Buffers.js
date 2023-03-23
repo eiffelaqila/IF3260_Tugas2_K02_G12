@@ -21,26 +21,12 @@ export function initBuffers(gl, vertexPosition, vertexColor) {
 /**
  * Creates a buffer for object position
  * @param {WebGLRenderingContext} gl
- * @param {number[]} vertexPosition
+ * @param {number[]} positions
  */
-function initPositionBuffer(gl, vertexPosition) {
+function initPositionBuffer(gl, positions) {
     const positionBuffer = gl.createBuffer();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    const positions = [
-        // Front face
-        -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
-        // Back face
-        -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0,
-        // Top face
-        -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0,
-        // Bottom face
-        -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0,
-        // Right face
-        1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0,
-        // Left face
-        -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0,
-    ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
     return positionBuffer;
@@ -49,38 +35,16 @@ function initPositionBuffer(gl, vertexPosition) {
 /**
  * Creates a buffer for object normal
  * @param {WebGLRenderingContext} gl
- * @param {number[]} vertexNormal
+ * @param {number[]} positions
  */
-function initNormalBuffer(gl, vertexNormal) {
+function initNormalBuffer(gl, positions) {
     const normalBuffer = gl.createBuffer();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 
-    const vertexNormals = [
-        // Front
-        0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,
+    const normals = getNormals(positions);
 
-        // Back
-        0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0,
-
-        // Top
-        0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
-
-        // Bottom
-        0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0,
-
-        // Right
-        1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-
-        // Left
-        -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
-    ];
-
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(vertexNormals),
-        gl.STATIC_DRAW
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 
     return normalBuffer;
 }
@@ -88,23 +52,14 @@ function initNormalBuffer(gl, vertexNormal) {
 /**
  * Creates a buffer for object color
  * @param {WebGLRenderingContext} gl
- * @param {number[]} vertexColor
+ * @param {number[][]} faceColors
  */
-function initColorBuffer(gl, vertexColor) {
+function initColorBuffer(gl, faceColors) {
     const colorBuffer = gl.createBuffer();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    const faceColors = [
-        [1.0, 1.0, 1.0, 1.0], // Front face: white
-        [1.0, 0.0, 0.0, 1.0], // Back face: red
-        [0.0, 1.0, 0.0, 1.0], // Top face: green
-        [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
-        [1.0, 1.0, 0.0, 1.0], // Right face: yellow
-        [1.0, 0.0, 1.0, 1.0], // Left face: purple
-    ];
 
     // Convert the array of colors into a table for all the vertices.
-
     var colors = [];
 
     for (var j = 0; j < faceColors.length; ++j) {
@@ -148,8 +103,59 @@ function initIndexBuffer(gl, vertex) {
     return indexBuffer;
 }
 
-/** TODO
+/**
  * Calculate vertex normal
- * @param {number[]} vertexPosition
+ * @param {number[]} positions
+ * @returns {number[]}
  */
-// function calculateNormal(vertexPosition) {}
+function getNormals(positions) {
+    let normals = [];
+
+    // For each faces, calculate normal
+    for (let i = 0; i < positions.length; i += 12) {
+        const vec21 = [
+            positions[i + 3] - positions[i],
+            positions[i + 4] - positions[i + 1],
+            positions[i + 5] - positions[i + 2],
+        ];
+        const vec31 = [
+            positions[i + 6] - positions[i],
+            positions[i + 7] - positions[i + 1],
+            positions[i + 8] - positions[i + 2],
+        ];
+
+        // vec21 x vec31
+        const normal = [
+            vec21[1] * vec31[2] - vec21[2] * vec31[1],
+            vec21[2] * vec31[0] - vec21[0] * vec31[2],
+            vec21[0] * vec31[1] - vec21[1] * vec31[0],
+        ];
+
+        // Normalized normal
+        const normalizedNormal = normalize(normal);
+        for (let j = 0; j < 4; j++) {
+            normals = normals.concat(normalizedNormal);
+        }
+    }
+
+    return normals;
+}
+
+/**
+ * Normalize vector
+ * @param {number[]} u
+ * @returns {number[]}
+ */
+function normalize(u) {
+    var normalizedU = [0, 0, 0];
+
+    // Calculate |u|
+    const sum = u[0] * u[0] + u[1] * u[1] + u[2] * u[2];
+    const sqrtSum = Math.sqrt(sum);
+
+    if (sqrtSum != 0) {
+        normalizedU = [u[0] / sqrtSum, u[1] / sqrtSum, u[2] / sqrtSum];
+    }
+
+    return normalizedU;
+}

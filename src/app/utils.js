@@ -1,3 +1,8 @@
+import WebGL from "../lib/WebGL.js";
+
+const loadItem = document.getElementById("load-item");
+const loadInfo = document.getElementById("load-info");
+
 const rotasiXOutput = document.getElementById("rotasiX-output");
 const rotasiYOutput = document.getElementById("rotasiY-output");
 const rotasiZOutput = document.getElementById("rotasiZ-output");
@@ -18,20 +23,111 @@ const upXOutput = document.getElementById("upX-output");
 const upYOutput = document.getElementById("upY-output");
 const upZOutput = document.getElementById("upZ-output");
 
-// Shape and Projection Selection
-function setShape() {
-    console.log("Set shape");
-}
-function setProjection() {
-    console.log("Set projection");
+// Sample shape
+const sampleShape = {
+    nodes: [
+        [-1, -1, 1],
+        [1, -1, 1],
+        [1, 1, 1],
+        [-1, 1, 1],
+        [-1, -1, -1],
+        [-1, 1, -1],
+        [1, 1, -1],
+        [1, -1, -1],
+    ],
+    vertices: [
+        {
+            faces: [
+                // Front face
+                [0, 1, 2, 3],
+                // Back
+                [4, 5, 6, 7],
+                // Top
+                [5, 3, 2, 6],
+                // Bottom
+                [4, 7, 1, 0],
+                // Right
+                [7, 6, 2, 1],
+                // Left
+                [4, 0, 3, 5],
+            ],
+            colorType: "variant",
+            colors: [
+                [1.0, 1.0, 1.0, 1.0], // Front face: white
+                [1.0, 0.0, 0.0, 1.0], // Back face: red
+                [0.0, 1.0, 0.0, 1.0], // Top face: green
+                [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
+                [1.0, 1.0, 0.0, 1.0], // Right face: yellow
+                [1.0, 0.0, 1.0, 1.0], // Left face: purple
+            ],
+        },
+    ],
+};
+
+// Shape selection
+/**
+ * Select shape
+ * @param {WebGL} gl
+ */
+function setShape(gl) {
+    if (shape.value != "file") {
+        loadItem.style.display = "none";
+        loadInfo.style.display = "block";
+
+        setDefaultShape(gl, shape.value);
+        return;
+    }
+
+    loadInfo.style.display = "none";
+    loadItem.style.display = "flex";
 }
 
-// Load and save
-function loadObject() {
-    console.log("Load object");
+/**
+ * Set shape from default shapes
+ * @param {WebGL} gl
+ * @param {string} name
+ */
+function setDefaultShape(gl, name) {
+    gl.drawModel(sampleShape);
 }
-function saveObject() {
+
+/**
+ * Set shape from JSON file
+ * @param {WebGL} gl
+ * @param {File} file
+ */
+function setShapeFromFile(gl, file) {
+    if (file.type && file.type.indexOf("json") === -1) {
+        console.log("File is not an JSON.", file.type, file);
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+        let data = JSON.parse(reader.result);
+        gl.drawModel(data);
+    };
+    reader.readAsText(file);
+}
+
+/**
+ * Load JSON object
+ * @param {WebGL} gl
+ */
+function loadObject(gl) {
+    setShapeFromFile(gl, load.files[0]);
+}
+
+/**
+ * Save object as JSON
+ * @param {WebGL} gl
+ */
+function saveObject(gl) {
     console.log("Save object");
+}
+
+// Projection selection
+function setProjection() {
+    console.log("Set projection");
 }
 
 // Reset View
@@ -208,6 +304,7 @@ function setUpZ() {
 }
 
 export {
+    sampleShape,
     setShape,
     saveObject,
     loadObject,

@@ -8,6 +8,7 @@ import {
     invert,
     transpose,
 } from "./Mat4.js";
+import { parseHollowObject } from "./object/HollowObject.js";
 
 export default class WebGL {
     /** @type {WebGLRenderingContext} WebGL */
@@ -81,9 +82,6 @@ export default class WebGL {
                 ),
             },
         };
-
-        // Initialize buffer for object
-        this.#buffer = initBuffers(this.#gl, [], []);
     }
 
     // Getter: gl, program, programInfo, and buffer
@@ -160,6 +158,20 @@ export default class WebGL {
     }
 
     /**
+     * Draw model and change buffer
+     * @param {Object} object
+     */
+    drawModel(object) {
+        let parsedObject = parseHollowObject(object);
+
+        this.#buffer = initBuffers(
+            this.#gl,
+            parsedObject.positions,
+            parsedObject.colors
+        );
+    }
+
+    /**
      * Draw scene
      * @param {WebGL} webgl
      */
@@ -197,19 +209,19 @@ export default class WebGL {
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            cubeRotation, // amount to rotate in radians
+            cubeRotation * 0.05, // amount to rotate in radians
             [0, 0, 1]
         ); // axis to rotate around (Z)
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            cubeRotation * 0.7, // amount to rotate in radians
+            cubeRotation * 0.05, // amount to rotate in radians
             [0, 1, 0]
         ); // axis to rotate around (Y)
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            cubeRotation * 0.3, // amount to rotate in radians
+            cubeRotation * 0.05, // amount to rotate in radians
             [1, 0, 0]
         ); // axis to rotate around (X)
 
@@ -266,20 +278,14 @@ export default class WebGL {
      * @param {WebGL} webgl
      */
     setPositionAttribute(webgl) {
-        const numComponents = 3;
-        const type = webgl.gl.FLOAT; // the data in the buffer is 32bit floats
-        const normalize = false; // don't normalize
-        const stride = 0; // how many bytes to get from one set of values to the next
-        // 0 = use type and numComponents above
-        const offset = 0; // how many bytes inside the buffer to start from
         webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, webgl.buffer.position);
         webgl.gl.vertexAttribPointer(
             webgl.programInfo.attribLocation.vertexPosition,
-            numComponents,
-            type,
-            normalize,
-            stride,
-            offset
+            3,
+            webgl.gl.FLOAT,
+            false,
+            0,
+            0
         );
         webgl.gl.enableVertexAttribArray(
             webgl.programInfo.attribLocation.vertexPosition
@@ -291,19 +297,14 @@ export default class WebGL {
      * @param {WebGL} webgl
      */
     setColorAttribute(webgl) {
-        const numComponents = 4;
-        const type = webgl.gl.FLOAT;
-        const normalize = false;
-        const stride = 0;
-        const offset = 0;
         webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, webgl.buffer.color);
         webgl.gl.vertexAttribPointer(
             webgl.programInfo.attribLocation.vertexColor,
-            numComponents,
-            type,
-            normalize,
-            stride,
-            offset
+            4,
+            webgl.gl.FLOAT,
+            false,
+            0,
+            0
         );
         webgl.gl.enableVertexAttribArray(
             webgl.programInfo.attribLocation.vertexColor
@@ -315,19 +316,14 @@ export default class WebGL {
      * @param {WebGL} webgl
      */
     setNormalAttribute(webgl) {
-        const numComponents = 3;
-        const type = webgl.gl.FLOAT;
-        const normalize = false;
-        const stride = 0;
-        const offset = 0;
         webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, webgl.buffer.normal);
         webgl.gl.vertexAttribPointer(
             webgl.programInfo.attribLocation.vertexNormal,
-            numComponents,
-            type,
-            normalize,
-            stride,
-            offset
+            3,
+            webgl.gl.FLOAT,
+            false,
+            0,
+            0
         );
         webgl.gl.enableVertexAttribArray(
             webgl.programInfo.attribLocation.vertexNormal
