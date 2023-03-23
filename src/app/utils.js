@@ -8,6 +8,7 @@ const scaleXOutput = document.getElementById("scaleX-output");
 const scaleYOutput = document.getElementById("scaleY-output");
 const scaleZOutput = document.getElementById("scaleZ-output");
 
+const projection = document.getElementById("projection");
 const eyeXOutput = document.getElementById("eyeX-output");
 const eyeYOutput = document.getElementById("eyeY-output");
 const eyeZOutput = document.getElementById("eyeZ-output");
@@ -22,15 +23,15 @@ const SHADING_ON_TEXT = "Shading (ON)";
 const SHADING_ON_TEXT_COLOR = "rgb(0, 0, 0)";
 const SHADING_ON_BG_COLOR = "rgb(0, 255, 0)";
 const SHADING_OFF_TEXT = "Shading (OFF)";
-const SHADING_OFF_TEXT_COLOR = "rgb(255, 255, 255)";
-const SHADING_OFF_BG_COLOR = "rgb(255, 0, 0)";
+const SHADING_OFF_TEXT_COLOR = "rgb(0, 0, 0)";
+const SHADING_OFF_BG_COLOR = "rgb(211, 211, 211)";
 
 // Shape and Projection Selection
 function setShape() {
     console.log("Set shape");
 }
-function setProjection() {
-    console.log("Set projection");
+function getProjectionType() {
+    return projection.value;
 }
 
 // Load and save
@@ -42,19 +43,19 @@ function saveObject() {
 }
 
 // Shading
-function changeShadingMode() {
+function setShadingMode() {
     const shadingBtnText = shading.innerText;
     if (shadingBtnText === SHADING_ON_TEXT) {
         shading.innerText = SHADING_OFF_TEXT;
-        shading.style.backgroundColor = SHADING_OFF_BG_COLOR;
         shading.style.color = SHADING_OFF_TEXT_COLOR;
+        shading.style.backgroundColor = SHADING_OFF_BG_COLOR;
     } else {
         shading.innerText = SHADING_ON_TEXT;
-        shading.style.backgroundColor = SHADING_ON_BG_COLOR;
         shading.style.color = SHADING_ON_TEXT_COLOR;
+        shading.style.backgroundColor = SHADING_ON_BG_COLOR;
     }
 }
-function isShadingMode() {
+function getShadingMode() {
     const shadingBtnText = shading.innerText;
     return shadingBtnText === SHADING_ON_TEXT;
 }
@@ -244,9 +245,9 @@ export {
     setScaleX,
     setScaleY,
     setScaleZ,
-    setProjection,
-    changeShadingMode,
-    isShadingMode,
+    getProjectionType,
+    setShadingMode,
+    getShadingMode,
     resetView,
     setEyeX,
     setEyeY,

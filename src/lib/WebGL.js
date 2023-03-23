@@ -1,6 +1,6 @@
 import { DefaultFragCode, DefaultVertCode } from "./shaders/DefaultShaders.js";
 import { initBuffers } from "../lib/Buffers.js";
-import { isShadingMode } from "../app/utils.js";
+import { getShadingMode, getProjectionType } from "../app/utils.js";
 import {
     create,
     perspective,
@@ -179,9 +179,27 @@ export default class WebGL {
         const zFar = 100.0;
         const projectionMatrix = create();
 
+        const projectionType = getProjectionType();
+        // if (projectionType === "orthographic") orthographic(projectionMatrix);
+        // else if (projectionType === "oblique") oblique(projectionMatrix);
+        // else perspective(projectionMatrix);
+
         // note: glmatrix.js always has the first argument
         // as the destination to receive the result.
-        perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+        // perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+
+        var left = -1.0;
+        var right = 1.0;
+        var bottom = -1.0;
+        var top = 1.0;
+        var near = 0.1;
+        var far = 100.0;
+        const orthoProjectionMatrix = new Float32Array([
+            2.0 / (right - left), 0, 0, -(right + left) / (right - left),
+            0, 2.0 / (top - bottom), 0, -(top + bottom) / (top - bottom),
+            0, 0, -2.0 / (far - near), -(far + near) / (far - near),
+            0, 0, 0, 1
+          ]);
 
         // Set the drawing position to the "identity" point, which is
         // the center of the scene.
@@ -219,7 +237,7 @@ export default class WebGL {
         transpose(normalMatrix, normalMatrix);
 
         // Set uniform bool u_Shading value for determining shading mode
-        const isShading = isShadingMode();
+        const isShading = getShadingMode();
 
         // Tell WebGL how to pull out the positions from the position
         // buffer into the vertexPosition attribute.
@@ -239,7 +257,7 @@ export default class WebGL {
         webgl.gl.uniformMatrix4fv(
             webgl.programInfo.uniformLocation.projectionMatrix,
             false,
-            projectionMatrix
+            orthoProjectionMatrix
         );
         webgl.gl.uniformMatrix4fv(
             webgl.programInfo.uniformLocation.modelViewMatrix,
