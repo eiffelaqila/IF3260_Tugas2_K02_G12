@@ -384,25 +384,24 @@ function getProjectionType() {
 // Shading
 /**
  * Listener callback for setting shading mode
- * @param {HTMLElement} shading
  */
-function setShadingMode(shading) {
-    const shadingBtnText = shading.innerText;
+function setShadingMode() {
+    const shadingBtnText = window.shading.innerText;
     if (shadingBtnText === SHADING_ON_TEXT) {
-        shading.innerText = SHADING_OFF_TEXT;
-        shading.style.color = SHADING_OFF_TEXT_COLOR;
-        shading.style.backgroundColor = SHADING_OFF_BG_COLOR;
+        window.shading.innerText = SHADING_OFF_TEXT;
+        window.shading.style.color = SHADING_OFF_TEXT_COLOR;
+        window.shading.style.backgroundColor = SHADING_OFF_BG_COLOR;
     } else {
-        shading.innerText = SHADING_ON_TEXT;
-        shading.style.color = SHADING_ON_TEXT_COLOR;
-        shading.style.backgroundColor = SHADING_ON_BG_COLOR;
+        window.shading.innerText = SHADING_ON_TEXT;
+        window.shading.style.color = SHADING_ON_TEXT_COLOR;
+        window.shading.style.backgroundColor = SHADING_ON_BG_COLOR;
     }
 }
 /**
  * Get shading mode selected by user
  */
 function getShadingMode() {
-    const shadingBtnText = shading.innerText;
+    const shadingBtnText = window.shading.innerText;
     return shadingBtnText === SHADING_ON_TEXT;
 }
 

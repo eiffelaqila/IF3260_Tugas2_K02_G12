@@ -173,6 +173,7 @@ export default class WebGL {
      */
     drawModel(object) {
         let parsedObject = parseHollowObject(object);
+        console.log(parsedObject);
 
         // Reset buffer
         this.#buffer = [];
