@@ -114,8 +114,8 @@ function parseHollowObject(obj) {
             currColors.push(color);
         });
 
-        positions = positions.concat(currPositions);
-        colors = colors.concat(currColors);
+        positions.push(currPositions);
+        colors.push(currColors);
     });
 
     return {

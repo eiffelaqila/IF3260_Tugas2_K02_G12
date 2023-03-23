@@ -20,8 +20,10 @@ export default class WebGL {
     #program;
     /** @type {{WebGLProgram, attribLocation: {vertexPosition: number, vertexNormal: number, vertexColor: number}, uniformLocation: {normalMatrix: WebGLUniformLocation | null, modelViewMatrix: WebGLUniformLocation | null, projectionMatrix: WebGLUniformLocation | null, shading: WebGLUniformLocation | null}}} Attribute location of vertex position */
     #programInfo;
-    /** @type {{position: WebGLBuffer | null, normal: WebGLBuffer | null, color: WebGLBuffer | null, index: WebGLBuffer | null}} Attribute location of vertex position */
+    /** @type {{position: WebGLBuffer | null, normal: WebGLBuffer | null, color: WebGLBuffer | null, index: WebGLBuffer | null}[]} Attribute location of vertex position */
     #buffer;
+    /** @type {{positions: number[], colors: number[]} | null} Attribute location of vertex position */
+    #parsedObject;
 
     /**
      * Creates an instance of Drawer.
@@ -48,6 +50,8 @@ export default class WebGL {
 
         // Initialize vertex and fragment shader program
         this.#program = this.createShaderProgram(fragCode, vertCode);
+        this.#buffer = [];
+        this.#parsedObject = null;
 
         // Program informations: program, attributes, and uniform locations
         this.#programInfo = {
@@ -99,6 +103,9 @@ export default class WebGL {
     }
     get buffer() {
         return this.#buffer;
+    }
+    get parsedObject() {
+        return this.#parsedObject;
     }
 
     /**
@@ -167,21 +174,29 @@ export default class WebGL {
     drawModel(object) {
         let parsedObject = parseHollowObject(object);
 
-        this.#buffer = initBuffers(
-            this.#gl,
-            parsedObject.positions,
-            parsedObject.colors
-        );
+        // Reset buffer
+        this.#buffer = [];
+        this.#parsedObject = parsedObject;
+
+        for (let i = 0; i < parsedObject.positions.length; i++) {
+            const buffer = initBuffers(
+                this.#gl,
+                parsedObject.positions[i],
+                parsedObject.colors[i]
+            );
+            this.#buffer.push(buffer);
+        }
     }
 
     /**
      * Draw scene
      * @param {WebGL} webgl
      */
-    drawScene(webgl, cubeRotation) {
+    drawScene(webgl, buffer, vCount, cubeRotation) {
+        // console.log(webgl.parsedObject.positions);
         // Clear canvas
-        webgl.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        webgl.gl.clearDepth(1.0);
+        // webgl.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        // webgl.gl.clearDepth(1.0);
         webgl.gl.enable(webgl.gl.DEPTH_TEST);
         webgl.gl.depthFunc(webgl.gl.LEQUAL);
         webgl.gl.clear(webgl.gl.COLOR_BUFFER_BIT | webgl.gl.DEPTH_BUFFER_BIT);
@@ -237,19 +252,19 @@ export default class WebGL {
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            cubeRotation * 0.05, // amount to rotate in radians
+            cubeRotation * 0.5, // amount to rotate in radians
             [0, 0, 1]
         ); // axis to rotate around (Z)
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            cubeRotation * 0.05, // amount to rotate in radians
+            cubeRotation * 0.5, // amount to rotate in radians
             [0, 1, 0]
         ); // axis to rotate around (Y)
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            cubeRotation * 0.05, // amount to rotate in radians
+            cubeRotation * 0.5, // amount to rotate in radians
             [1, 0, 0]
         ); // axis to rotate around (X)
 
@@ -262,14 +277,48 @@ export default class WebGL {
 
         // Tell WebGL how to pull out the positions from the position
         // buffer into the vertexPosition attribute.
-        this.setPositionAttribute(webgl);
 
-        this.setColorAttribute(webgl);
+        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, buffer.position);
+        webgl.gl.vertexAttribPointer(
+            webgl.programInfo.attribLocation.vertexPosition,
+            3,
+            webgl.gl.FLOAT,
+            false,
+            0,
+            0
+        );
+        webgl.gl.enableVertexAttribArray(
+            webgl.programInfo.attribLocation.vertexPosition
+        );
+
+        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, buffer.color);
+        webgl.gl.vertexAttribPointer(
+            webgl.programInfo.attribLocation.vertexColor,
+            4,
+            webgl.gl.FLOAT,
+            false,
+            0,
+            0
+        );
+        webgl.gl.enableVertexAttribArray(
+            webgl.programInfo.attribLocation.vertexColor
+        );
+
+        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, buffer.normal);
+        webgl.gl.vertexAttribPointer(
+            webgl.programInfo.attribLocation.vertexNormal,
+            3,
+            webgl.gl.FLOAT,
+            false,
+            0,
+            0
+        );
+        webgl.gl.enableVertexAttribArray(
+            webgl.programInfo.attribLocation.vertexNormal
+        );
 
         // Tell WebGL which indices to use to index the vertices
-        webgl.gl.bindBuffer(webgl.gl.ELEMENT_ARRAY_BUFFER, webgl.buffer.index);
-
-        this.setNormalAttribute(webgl);
+        webgl.gl.bindBuffer(webgl.gl.ELEMENT_ARRAY_BUFFER, buffer.index);
 
         // Tell WebGL to use our program when drawing
         webgl.gl.useProgram(webgl.programInfo.program);
@@ -294,9 +343,8 @@ export default class WebGL {
             webgl.programInfo.uniformLocation.shading,
             isShading
         );
-
         {
-            const vertexCount = 36;
+            const vertexCount = vCount / 2;
             const type = webgl.gl.UNSIGNED_SHORT;
             const offset = 0;
             webgl.gl.drawElements(
@@ -312,8 +360,8 @@ export default class WebGL {
      * Set position
      * @param {WebGL} webgl
      */
-    setPositionAttribute(webgl) {
-        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, webgl.buffer.position);
+    setPositionAttribute(webgl, buffer) {
+        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, buffer.position);
         webgl.gl.vertexAttribPointer(
             webgl.programInfo.attribLocation.vertexPosition,
             3,
@@ -331,8 +379,8 @@ export default class WebGL {
      * Set color
      * @param {WebGL} webgl
      */
-    setColorAttribute(webgl) {
-        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, webgl.buffer.color);
+    setColorAttribute(webgl, buffer) {
+        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, buffer.color);
         webgl.gl.vertexAttribPointer(
             webgl.programInfo.attribLocation.vertexColor,
             4,
@@ -350,8 +398,8 @@ export default class WebGL {
      * Set normal
      * @param {WebGL} webgl
      */
-    setNormalAttribute(webgl) {
-        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, webgl.buffer.normal);
+    setNormalAttribute(webgl, buffer) {
+        webgl.gl.bindBuffer(webgl.gl.ARRAY_BUFFER, buffer.normal);
         webgl.gl.vertexAttribPointer(
             webgl.programInfo.attribLocation.vertexNormal,
             3,
