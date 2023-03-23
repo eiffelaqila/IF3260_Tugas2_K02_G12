@@ -23,6 +23,13 @@ const upXOutput = document.getElementById("upX-output");
 const upYOutput = document.getElementById("upY-output");
 const upZOutput = document.getElementById("upZ-output");
 
+const SHADING_ON_TEXT = "Shading (ON)";
+const SHADING_ON_TEXT_COLOR = "rgb(0, 0, 0)";
+const SHADING_ON_BG_COLOR = "rgb(0, 255, 0)";
+const SHADING_OFF_TEXT = "Shading (OFF)";
+const SHADING_OFF_TEXT_COLOR = "rgb(255, 255, 255)";
+const SHADING_OFF_BG_COLOR = "rgb(255, 0, 0)";
+
 // Sample shape
 const sampleShape = {
     nodes: [
@@ -130,6 +137,31 @@ function setProjection() {
     console.log("Set projection");
 }
 
+// Load and save
+function loadObject() {
+    console.log("Load object");
+}
+function saveObject() {
+    console.log("Save object");
+}
+
+// Shading
+function changeShadingMode() {
+    const shadingBtnText = shading.innerText;
+    if (shadingBtnText === SHADING_ON_TEXT) {
+        shading.innerText = SHADING_OFF_TEXT;
+        shading.style.backgroundColor = SHADING_OFF_BG_COLOR;
+        shading.style.color = SHADING_OFF_TEXT_COLOR;
+    } else {
+        shading.innerText = SHADING_ON_TEXT;
+        shading.style.backgroundColor = SHADING_ON_BG_COLOR;
+        shading.style.color = SHADING_ON_TEXT_COLOR;
+    }
+}
+function isShadingMode() {
+    const shadingBtnText = shading.innerText;
+    return shadingBtnText === SHADING_ON_TEXT;
+}
 // Reset View
 function resetView() {
     console.log("Reset view");
@@ -318,6 +350,8 @@ export {
     setScaleY,
     setScaleZ,
     setProjection,
+    changeShadingMode,
+    isShadingMode,
     resetView,
     setEyeX,
     setEyeY,
