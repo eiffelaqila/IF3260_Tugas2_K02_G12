@@ -195,9 +195,11 @@ export default class WebGL {
         // Clear canvas
         // webgl.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         // webgl.gl.clearDepth(1.0);
+        /*
         webgl.gl.enable(webgl.gl.DEPTH_TEST);
         webgl.gl.depthFunc(webgl.gl.LEQUAL);
         webgl.gl.clear(webgl.gl.COLOR_BUFFER_BIT | webgl.gl.DEPTH_BUFFER_BIT);
+        */
 
         const fieldOfView = (45 * Math.PI) / 180; // in radians
         const aspect =

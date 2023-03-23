@@ -79,6 +79,10 @@ function main() {
         deltaTime = now * 0.001 - then;
         then = now * 0.001;
 
+        webgl.gl.enable(webgl.gl.DEPTH_TEST);
+        webgl.gl.depthFunc(webgl.gl.LEQUAL);
+        webgl.gl.clear(webgl.gl.COLOR_BUFFER_BIT | webgl.gl.DEPTH_BUFFER_BIT);
+
         for (let i = 0; i < webgl.parsedObject.positions.length; i++) {
             webgl.drawScene(
                 webgl,
