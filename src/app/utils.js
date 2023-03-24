@@ -458,7 +458,7 @@ function setRotasiZ(gl) {
     gl.setRotationZ(currValue);
 }
 
-function setTranslasiX() {
+function setTranslasiX(gl) {
     let prevValue = translasiXOutput.value;
     let currValue = translasiX.value;
 
@@ -466,8 +466,10 @@ function setTranslasiX() {
 
     console.log("Translasi X:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setTranslationX(currValue);
 }
-function setTranslasiY() {
+function setTranslasiY(gl) {
     let prevValue = translasiYOutput.value;
     let currValue = translasiY.value;
 
@@ -475,8 +477,10 @@ function setTranslasiY() {
 
     console.log("Translasi Y:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setTranslationY(currValue);
 }
-function setTranslasiZ() {
+function setTranslasiZ(gl) {
     let prevValue = translasiZOutput.value;
     let currValue = translasiZ.value;
 
@@ -484,6 +488,8 @@ function setTranslasiZ() {
 
     console.log("Translasi Z:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setTranslationZ(currValue);
 }
 
 function setScaleX() {

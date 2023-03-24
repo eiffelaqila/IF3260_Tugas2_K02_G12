@@ -37,6 +37,7 @@ export default class WebGL {
     #constants
 
     #rotation
+    #translation
 
     /**
      * Creates an instance of Drawer.
@@ -131,6 +132,12 @@ export default class WebGL {
         this.#animationMode = true;
 
         this.#rotation = {
+            x : 0,
+            y : 0,
+            z : 0
+        }
+
+        this.#translation = {
             x : 0,
             y : 0,
             z : 0
@@ -278,6 +285,13 @@ export default class WebGL {
             modelViewMatrix, // matrix to rotate
             this.#rotation.z * Math.PI / 180,
             [0, 0, 1]
+        )
+
+        // TRANSLATION MATRIX AROUND X
+        translate(
+            modelViewMatrix, // destination matrix
+            modelViewMatrix, // matrix to translate
+            [this.#translation.x, this.#translation.y, this.#translation.z]
         )
 
         if (this.#animationMode) {
@@ -518,5 +532,17 @@ export default class WebGL {
 
     setRotationZ(angle) {
         this.#rotation.z = angle;
+    }
+
+    setTranslationX(dist) {
+        this.#translation.x = dist;
+    }
+
+    setTranslationY(dist) {
+        this.#translation.y = dist;
+    }
+
+    setTranslationZ(dist) {
+        this.#translation.z = dist;
     }
 }
