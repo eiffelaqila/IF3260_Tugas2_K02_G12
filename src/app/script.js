@@ -104,24 +104,12 @@ function main() {
  * @param {WebGL} webgl
  */
 function initEventHandler(webgl) {
-    shape.addEventListener("change", () => {
-        setShape(webgl);
-    });
-    projection.addEventListener("change", () => {
-        setProjectionType(webgl);
-    });
-    shading.addEventListener("click", () => {
-        setShadingMode(webgl);
-    });
-    animation.addEventListener("click", () => {
-        setAnimationMode(webgl);
-    });
-    load.addEventListener("change", () => {
-        loadObject(webgl);
-    });
-    save.addEventListener("click", () => {
-        saveObject(webgl);
-    });
+    shape.addEventListener("change", () => setShape(webgl));
+    projection.addEventListener("change", () => setProjectionType(webgl));
+    shading.addEventListener("click", () => setShadingMode(webgl));
+    animation.addEventListener("click", () => setAnimationMode(webgl));
+    load.addEventListener("change", () => loadObject(webgl));
+    save.addEventListener("click", () => saveObject(webgl));
     rotasiX.addEventListener("input", () => setRotasiX(webgl));
     rotasiY.addEventListener("input", () => setRotasiY(webgl));
     rotasiZ.addEventListener("input", () => setRotasiZ(webgl));
@@ -131,7 +119,7 @@ function initEventHandler(webgl) {
     scaleX.addEventListener("input", setScaleX);
     scaleY.addEventListener("input", setScaleY);
     scaleZ.addEventListener("input", setScaleZ);
-    resetview.addEventListener("click", resetView);
+    resetview.addEventListener("click", () => resetView(webgl));
     eyeX.addEventListener("input", setEyeX);
     eyeY.addEventListener("input", setEyeY);
     eyeZ.addEventListener("input", setEyeZ);

@@ -432,8 +432,26 @@ function setShadingMode(gl) {
 }
 
 // Reset View
-function resetView() {
+function resetView(gl) {
     console.log("Reset view");
+    rotasiX.value = 0;
+    setRotasiX(gl);
+    rotasiY.value = 0;
+    setRotasiY(gl);
+    rotasiZ.value = 0;
+    setRotasiZ(gl);
+    translasiX.value = 0;
+    setTranslasiX(gl);
+    translasiY.value = 0;
+    setTranslasiY(gl);
+    translasiZ.value = 0;
+    setTranslasiZ(gl);
+    scaleX.value = 0;
+    setScaleX(gl);
+    scaleY.value = 0;
+    setScaleY(gl);
+    scaleZ.value = 0;
+    setScaleZ(gl);
 }
 
 // Animation
