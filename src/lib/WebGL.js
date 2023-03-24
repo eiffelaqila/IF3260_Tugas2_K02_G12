@@ -1,15 +1,12 @@
 import { DefaultFragCode, DefaultVertCode } from "./shaders/DefaultShaders.js";
 import { initBuffers } from "../lib/Buffers.js";
-import { getShadingMode, getProjectionType, getAnimationMode } from "../app/utils.js";
-import { ortographicProjMat, ortographicProjMat1, ortographicProjMat2 } from "./Mat.js";
 import {
     create,
-    perspective,
     translate,
     rotate,
     invert,
     transpose,
-    ortho,
+    mat4
 } from "./Mat4.js";
 import { parseHollowObject } from "./object/HollowObject.js";
 
@@ -24,6 +21,20 @@ export default class WebGL {
     #buffer;
     /** @type {{positions: number[], colors: number[]} | null} Attribute location of vertex position */
     #parsedObject;
+    /** @type {"orth" | "pers" | "obl"} Projection type identifier */
+    #projectionType;
+    /** @type {boolean} Shading mode identifier whether enabled or not */
+    /** @type {Array<number>} Orthogonal projection matrix */
+    #orthProjMatrix
+    /** @type {Array<number>} Perspective projection matrix */
+    #persProjMatrix
+    /** @type {Array<number>} Oblique projection matrix */
+    #oblProjMatrix
+    #shadingMode;
+    /** @type {boolean} Animation mode identifier whether enabled or not */
+    #animationMode
+    /** @type {{projection: {ortho: {right: number, left: number, top: number, bottom: number}, pers: {fov: number, aspect: number}, obl: {thetaValue: number, phi: number}, zNear: number, zFar: number}}} */
+    #constants
 
     /**
      * Creates an instance of Drawer.
@@ -89,6 +100,33 @@ export default class WebGL {
                 ),
             },
         };
+
+        this.#constants = {
+            projection: {
+                ortho: {
+                    right   : 6, 
+                    left    : -6, 
+                    top     : 6, 
+                    bottom  : -6,
+                },
+                pers: {
+                    fov     : 45 * Math.PI / 180, 
+                    aspect  : this.gl.canvas.clientWidth / this.gl.canvas.clientHeight,
+                },
+                obl: {
+                    thetaValue  : 45, 
+                    phi         : 45
+                },
+                zNear   : 0.1, 
+                zFar    : 100
+            }
+        };
+
+        this.#projectionType = "orth";
+        this.setProjectionMatrices();
+
+        this.#shadingMode = true;
+        this.#animationMode = true;
     }
 
     // Getter: gl, program, programInfo, and buffer
@@ -107,7 +145,7 @@ export default class WebGL {
     get parsedObject() {
         return this.#parsedObject;
     }
-
+    
     /**
      * Initialize a shader program
      * @param {(String|WebGLShader)} fragCode
@@ -173,7 +211,6 @@ export default class WebGL {
      */
     drawModel(object) {
         let parsedObject = parseHollowObject(object);
-        console.log(parsedObject);
 
         // Reset buffer
         this.#buffer = [];
@@ -193,47 +230,11 @@ export default class WebGL {
      * Draw scene
      * @param {WebGL} webgl
      */
-    drawScene(webgl, buffer, vCount, cubeRotation, enableAnimation=getAnimationMode()) {
+    drawScene(webgl, buffer, vCount, cubeRotation) {
         // console.log(webgl.parsedObject.positions);
         // Clear canvas
         // webgl.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         // webgl.gl.clearDepth(1.0);
-
-        let projectionMatrix;
-
-        // let projectionMatrix = createProjectionMatrix();
-        
-        const projectionType = getProjectionType();
-        if (projectionType === "orthographic") {
-            const left = -1;
-            const right = 1;
-            const bottom = -1;
-            const top = 1;
-            const near = 0.1;
-            const far = 100.0;
-            projectionMatrix = ortographicProjMat(left, right, bottom, top, near, far);
-        }
-        else if (projectionType === "oblique") {
-            const fieldOfView = (45 * Math.PI) / 180; // in radians
-            const aspect =
-                webgl.gl.canvas.clientWidth / webgl.gl.canvas.clientHeight;
-            const zNear = 0.1;
-            const zFar = 100.0;
-            projectionMatrix = create();
-            perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-        }
-        else {
-            const fieldOfView = (45 * Math.PI) / 180; // in radians
-            const aspect =
-                webgl.gl.canvas.clientWidth / webgl.gl.canvas.clientHeight;
-            const zNear = 0.1;
-            const zFar = 100.0;
-            projectionMatrix = create();
-            perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-        }
-
-        // note: glmatrix.js always has the first argument
-        // as the destination to receive the result.
 
         // Set the drawing position to the "identity" point, which is
         // the center of the scene.
@@ -244,10 +245,10 @@ export default class WebGL {
         translate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to translate
-            [-0.0, 0.0, -6.0]
+            [0.0, 0.0, -6.0]
         ); // amount to translate
 
-        if (enableAnimation) {
+        if (this.#animationMode) {
             rotate(
                 modelViewMatrix, // destination matrix
                 modelViewMatrix, // matrix to rotate
@@ -272,8 +273,11 @@ export default class WebGL {
         invert(normalMatrix, modelViewMatrix);
         transpose(normalMatrix, normalMatrix);
 
-        // Set uniform bool u_Shading value for determining shading mode
-        const isShading = getShadingMode();
+        // Set projection matrix given projection type
+        let projectionMatrix;
+        if (this.#projectionType === "orth") projectionMatrix = this.#orthProjMatrix;
+        else if (this.#projectionType === "pers") projectionMatrix = this.#persProjMatrix;
+        else projectionMatrix = this.#oblProjMatrix;
 
         // Tell WebGL how to pull out the positions from the position
         // buffer into the vertexPosition attribute.
@@ -341,7 +345,7 @@ export default class WebGL {
         );
         webgl.gl.uniform1i(
             webgl.programInfo.uniformLocation.shading,
-            isShading
+            this.#shadingMode
         );
         {
             const vertexCount = vCount / 2;
@@ -411,5 +415,64 @@ export default class WebGL {
         webgl.gl.enableVertexAttribArray(
             webgl.programInfo.attribLocation.vertexNormal
         );
+    }
+
+    /**
+     * Set orthogonal, perspective, and oblique projection matrices
+     */
+    setProjectionMatrices() {
+        this.#orthProjMatrix = mat4.orthogonal(
+            this.#constants.projection.ortho.right,
+            this.#constants.projection.ortho.left,
+            this.#constants.projection.ortho.top,
+            this.#constants.projection.ortho.bottom,
+            this.#constants.projection.zNear,
+            this.#constants.projection.zFar
+        );
+        
+        this.#persProjMatrix = mat4.perspective(
+            this.#constants.projection.pers.fov,
+            this.#constants.projection.pers.aspect,
+            this.#constants.projection.zNear,
+            this.#constants.projection.zFar
+        );
+    
+        const m = mat4.oblique(
+            -this.#constants.projection.obl.thetaValue, 
+            -this.#constants.projection.obl.phi
+        );	
+        const n = mat4.orthogonal(
+            this.#constants.projection.ortho.right,
+            this.#constants.projection.ortho.left,
+            this.#constants.projection.ortho.top,
+            this.#constants.projection.ortho.bottom,
+            this.#constants.projection.zNear,
+            this.#constants.projection.zFar);
+        this.#oblProjMatrix = mat4.multiply(m, n);
+        this.#oblProjMatrix = mat4.translate(this.#oblProjMatrix, 3, 3, 3);
+    }
+
+    /**
+     * Projection type setter
+     * @param {"orth" | "pers" | "obl"} projType
+     */
+    setProjectionType(projType) {
+        this.#projectionType = projType;
+    }
+
+    /**
+     * Shading mode setter
+     * @param {boolean} isShadingMode
+     */
+    setShadingMode(isShadingMode) {
+        this.#shadingMode = isShadingMode;
+    }
+
+    /**
+     * Animation mode setter
+     * @param {boolean} isAnimationMode
+     */
+    setAnimationMode(isAnimationMode) {
+        this.#animationMode = isAnimationMode;
     }
 }

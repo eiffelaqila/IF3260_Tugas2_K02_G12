@@ -13,7 +13,6 @@ const scaleXOutput = document.getElementById("scaleX-output");
 const scaleYOutput = document.getElementById("scaleY-output");
 const scaleZOutput = document.getElementById("scaleZ-output");
 
-const projection = document.getElementById("projection");
 const eyeXOutput = document.getElementById("eyeX-output");
 const eyeYOutput = document.getElementById("eyeY-output");
 const eyeZOutput = document.getElementById("eyeZ-output");
@@ -25,18 +24,14 @@ const upYOutput = document.getElementById("upY-output");
 const upZOutput = document.getElementById("upZ-output");
 
 const SHADING_ON_TEXT = "Shading (ON)";
-const SHADING_ON_TEXT_COLOR = "rgb(0, 0, 0)";
 const SHADING_ON_BG_COLOR = "rgb(0, 255, 0)";
 const SHADING_OFF_TEXT = "Shading (OFF)";
-const SHADING_OFF_TEXT_COLOR = "rgb(0, 0, 0)";
 const SHADING_OFF_BG_COLOR = "rgb(211, 211, 211)";
 
 const ANIMATION_ON_TEXT = "Animation (ON)";
-const ANIMATION_ON_TEXT_COLOR = "rgb(0, 0, 0)";
 const ANIMATION_ON_BG_COLOR = "rgb(0, 255, 0)";
 const ANIMATION_OFF_TEXT = "Animation (OFF)";
-const ANIMATION_OFF_TEXT_COLOR = "rgb(255, 255, 255)";
-const ANIMATION_OFF_BG_COLOR = "rgb(255, 0, 0)";
+const ANIMATION_OFF_BG_COLOR = "rgb(211, 211, 211)";
 
 // Sample shape
 const sampleShape = {
@@ -382,34 +377,28 @@ function saveObject(gl) {
 }
 
 /**
- * Get projection type selected by user
+ * Set projection type
+ * @param {WebGL} gl
  */
-function getProjectionType() {
-    return projection.value;
+function setProjectionType(gl) {
+    gl.setProjectionType(window.projection.value);
 }
 
 // Shading
 /**
  * Listener callback for setting shading mode
+ * @param {WebGL} gl
  */
-function setShadingMode() {
-    const shadingBtnText = window.shading.innerText;
-    if (shadingBtnText === SHADING_ON_TEXT) {
+function setShadingMode(gl) {
+    if (window.shading.innerText === SHADING_ON_TEXT) {
         window.shading.innerText = SHADING_OFF_TEXT;
-        window.shading.style.color = SHADING_OFF_TEXT_COLOR;
         window.shading.style.backgroundColor = SHADING_OFF_BG_COLOR;
-    } else {
+    } else if (window.shading.innerText === SHADING_OFF_TEXT) {
         window.shading.innerText = SHADING_ON_TEXT;
-        window.shading.style.color = SHADING_ON_TEXT_COLOR;
         window.shading.style.backgroundColor = SHADING_ON_BG_COLOR;
     }
-}
-/**
- * Get shading mode selected by user
- */
-function getShadingMode() {
-    const shadingBtnText = window.shading.innerText;
-    return shadingBtnText === SHADING_ON_TEXT;
+
+    gl.setShadingMode(window.shading.innerText === SHADING_ON_TEXT);
 }
 
 // Reset View
@@ -418,21 +407,20 @@ function resetView() {
 }
 
 // Animation
-function changeAnimationMode() {
-    const animationBtnText = animation.innerText;
-    if (animationBtnText === ANIMATION_ON_TEXT) {
-        animation.innerText = ANIMATION_OFF_TEXT;
-        animation.style.backgroundColor = ANIMATION_OFF_BG_COLOR;
-        animation.style.color = ANIMATION_OFF_TEXT_COLOR;
-    } else {
-        animation.innerText = ANIMATION_ON_TEXT;
-        animation.style.backgroundColor = ANIMATION_ON_BG_COLOR;
-        animation.style.color = ANIMATION_ON_TEXT_COLOR;
+/**
+ * Listener callback for setting animation mode
+ * @param {WebGL} gl
+ */
+function setAnimationMode(gl) {
+    if (window.animation.innerText === ANIMATION_ON_TEXT) {
+        window.animation.innerText = ANIMATION_OFF_TEXT;
+        window.animation.style.backgroundColor = ANIMATION_OFF_BG_COLOR;
+    } else if (window.animation.innerText === ANIMATION_OFF_TEXT) {
+        window.animation.innerText = ANIMATION_ON_TEXT;
+        window.animation.style.backgroundColor = ANIMATION_ON_BG_COLOR;
     }
-}
-function isAnimationMode() {
-    const animationBtnText = animation.innerText;
-    return animationBtnText === ANIMATION_ON_TEXT;
+
+    gl.setAnimationMode(window.animation.innerText === ANIMATION_ON_TEXT);
 }
 
 // Object Transformations
@@ -617,12 +605,10 @@ export {
     setScaleX,
     setScaleY,
     setScaleZ,
-    getProjectionType,
+    setProjectionType,
     setShadingMode,
-    getShadingMode,
     resetView,
-    changeAnimationMode,
-    isAnimationMode,
+    setAnimationMode,
     setEyeX,
     setEyeY,
     setEyeZ,

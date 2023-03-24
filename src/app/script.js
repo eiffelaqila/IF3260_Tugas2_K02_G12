@@ -14,6 +14,7 @@ import {
     setScaleX,
     setScaleY,
     setScaleZ,
+    setProjectionType,
     setShadingMode,
     setAnimationMode,
     resetView,
@@ -45,6 +46,7 @@ const translasiZ = document.getElementById("translasiZ");
 const scaleX = document.getElementById("scaleX");
 const scaleY = document.getElementById("scaleY");
 const scaleZ = document.getElementById("scaleZ");
+const projection = document.getElementById("projection");
 const shading = document.getElementById("shading");
 const animation = document.getElementById("animation");
 const resetview = document.getElementById("resetview");
@@ -105,6 +107,15 @@ function initEventHandler(webgl) {
     shape.addEventListener("change", () => {
         setShape(webgl);
     });
+    projection.addEventListener("change", () => {
+        setProjectionType(webgl);
+    });
+    shading.addEventListener("click", () => {
+        setShadingMode(webgl);
+    });
+    animation.addEventListener("click", () => {
+        setAnimationMode(webgl);
+    });
     load.addEventListener("change", () => {
         loadObject(webgl);
     });
@@ -120,8 +131,6 @@ function initEventHandler(webgl) {
     scaleX.addEventListener("input", setScaleX);
     scaleY.addEventListener("input", setScaleY);
     scaleZ.addEventListener("input", setScaleZ);
-    shading.addEventListener("click", setShadingMode);
-    animation.addEventListener("click", setAnimationMode);
     resetview.addEventListener("click", resetView);
     eyeX.addEventListener("input", setEyeX);
     eyeY.addEventListener("input", setEyeY);
