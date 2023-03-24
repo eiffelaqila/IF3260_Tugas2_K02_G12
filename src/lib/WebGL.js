@@ -1,13 +1,6 @@
 import { DefaultFragCode, DefaultVertCode } from "./shaders/DefaultShaders.js";
 import { initBuffers } from "../lib/Buffers.js";
-import {
-    create,
-    translate,
-    rotate,
-    invert,
-    transpose,
-    mat4
-} from "./Mat4.js";
+import { create, translate, rotate, invert, transpose, mat4 } from "./Mat4.js";
 import { parseHollowObject } from "./object/HollowObject.js";
 
 export default class WebGL {
@@ -25,19 +18,21 @@ export default class WebGL {
     #projectionType;
     /** @type {boolean} Shading mode identifier whether enabled or not */
     /** @type {Array<number>} Orthogonal projection matrix */
-    #orthProjMatrix
+    #orthProjMatrix;
     /** @type {Array<number>} Perspective projection matrix */
-    #persProjMatrix
+    #persProjMatrix;
     /** @type {Array<number>} Oblique projection matrix */
-    #oblProjMatrix
+    #oblProjMatrix;
     #shadingMode;
     /** @type {boolean} Animation mode identifier whether enabled or not */
-    #animationMode
+    #animationMode;
     /** @type {{projection: {ortho: {right: number, left: number, top: number, bottom: number}, pers: {fov: number, aspect: number}, obl: {thetaValue: number, phi: number}, zNear: number, zFar: number}}} */
-    #constants
+    #constants;
 
-    #rotation
-    #translation
+    #rotation;
+    #translation;
+    #modelViewMatrix;
+    #object;
 
     /**
      * Creates an instance of Drawer.
@@ -66,6 +61,7 @@ export default class WebGL {
         this.#program = this.createShaderProgram(fragCode, vertCode);
         this.#buffer = [];
         this.#parsedObject = null;
+        this.#modelViewMatrix = null;
 
         // Program informations: program, attributes, and uniform locations
         this.#programInfo = {
@@ -107,22 +103,24 @@ export default class WebGL {
         this.#constants = {
             projection: {
                 ortho: {
-                    right   : 6, 
-                    left    : -6, 
-                    top     : 6, 
-                    bottom  : -6,
+                    right: 6,
+                    left: -6,
+                    top: 6,
+                    bottom: -6,
                 },
                 pers: {
-                    fov     : 45 * Math.PI / 180, 
-                    aspect  : this.gl.canvas.clientWidth / this.gl.canvas.clientHeight,
+                    fov: (45 * Math.PI) / 180,
+                    aspect:
+                        this.gl.canvas.clientWidth /
+                        this.gl.canvas.clientHeight,
                 },
                 obl: {
-                    thetaValue  : 45, 
-                    phi         : 45
+                    thetaValue: 45,
+                    phi: 45,
                 },
-                zNear   : 0.1, 
-                zFar    : 100
-            }
+                zNear: 0.1,
+                zFar: 100,
+            },
         };
 
         this.#projectionType = "orth";
@@ -132,16 +130,16 @@ export default class WebGL {
         this.#animationMode = true;
 
         this.#rotation = {
-            x : 0,
-            y : 0,
-            z : 0
-        }
+            x: 0,
+            y: 0,
+            z: 0,
+        };
 
         this.#translation = {
-            x : 0,
-            y : 0,
-            z : 0
-        }
+            x: 0,
+            y: 0,
+            z: 0,
+        };
     }
 
     // Getter: gl, program, programInfo, and buffer
@@ -160,7 +158,13 @@ export default class WebGL {
     get parsedObject() {
         return this.#parsedObject;
     }
-    
+    get modelViewMatrix() {
+        return this.#modelViewMatrix;
+    }
+    get object() {
+        return this.#object;
+    }
+
     /**
      * Initialize a shader program
      * @param {(String|WebGLShader)} fragCode
@@ -225,6 +229,7 @@ export default class WebGL {
      * @param {Object} object
      */
     drawModel(object) {
+        this.#object = object;
         let parsedObject = parseHollowObject(object);
 
         // Reset buffer
@@ -267,32 +272,32 @@ export default class WebGL {
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            this.#rotation.x * Math.PI / 180,
+            (this.#rotation.x * Math.PI) / 180,
             [1, 0, 0]
-        )
+        );
 
         // ROTATION MATRIX AROUND Y
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            this.#rotation.y * Math.PI / 180,
+            (this.#rotation.y * Math.PI) / 180,
             [0, 1, 0]
-        )
+        );
 
         // ROTATION MATRIX AROUND Z
         rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
-            this.#rotation.z * Math.PI / 180,
+            (this.#rotation.z * Math.PI) / 180,
             [0, 0, 1]
-        )
+        );
 
         // TRANSLATION MATRIX AROUND X
         translate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to translate
             [this.#translation.x, this.#translation.y, this.#translation.z]
-        )
+        );
 
         if (this.#animationMode) {
             rotate(
@@ -315,14 +320,18 @@ export default class WebGL {
             ); // axis to rotate around (X)
         }
 
+        this.#modelViewMatrix = modelViewMatrix;
+
         const normalMatrix = create();
         invert(normalMatrix, modelViewMatrix);
         transpose(normalMatrix, normalMatrix);
 
         // Set projection matrix given projection type
         let projectionMatrix;
-        if (this.#projectionType === "orth") projectionMatrix = this.#orthProjMatrix;
-        else if (this.#projectionType === "pers") projectionMatrix = this.#persProjMatrix;
+        if (this.#projectionType === "orth")
+            projectionMatrix = this.#orthProjMatrix;
+        else if (this.#projectionType === "pers")
+            projectionMatrix = this.#persProjMatrix;
         else projectionMatrix = this.#oblProjMatrix;
 
         // Tell WebGL how to pull out the positions from the position
@@ -475,25 +484,26 @@ export default class WebGL {
             this.#constants.projection.zNear,
             this.#constants.projection.zFar
         );
-        
+
         this.#persProjMatrix = mat4.perspective(
             this.#constants.projection.pers.fov,
             this.#constants.projection.pers.aspect,
             this.#constants.projection.zNear,
             this.#constants.projection.zFar
         );
-    
+
         const m = mat4.oblique(
-            -this.#constants.projection.obl.thetaValue, 
+            -this.#constants.projection.obl.thetaValue,
             -this.#constants.projection.obl.phi
-        );	
+        );
         const n = mat4.orthogonal(
             this.#constants.projection.ortho.right,
             this.#constants.projection.ortho.left,
             this.#constants.projection.ortho.top,
             this.#constants.projection.ortho.bottom,
             this.#constants.projection.zNear,
-            this.#constants.projection.zFar);
+            this.#constants.projection.zFar
+        );
         this.#oblProjMatrix = mat4.multiply(m, n);
         this.#oblProjMatrix = mat4.translate(this.#oblProjMatrix, 3, 3, 3);
     }

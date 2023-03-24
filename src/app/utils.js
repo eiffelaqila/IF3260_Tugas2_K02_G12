@@ -373,7 +373,37 @@ function loadObject(gl) {
  * @param {WebGL} gl
  */
 function saveObject(gl) {
-    console.log("Save object");
+    // Create new nodes after the transformations
+    let mv = gl.modelViewMatrix;
+    let newNodes = [];
+
+    gl.object.nodes.forEach((node) => {
+        let x = node[0];
+        let y = node[1];
+        let z = node[2];
+        let w = 1.0;
+
+        var newNode = [0, 0, 0, 0];
+        newNode[0] = mv[0] * x + mv[4] * y + mv[8] * z + mv[12] * w;
+        newNode[1] = mv[1] * x + mv[5] * y + mv[9] * z + mv[13] * w;
+        newNode[2] = mv[2] * x + mv[6] * y + mv[10] * z + mv[14] * w;
+        newNode[3] = mv[3] * x + mv[7] * y + mv[11] * z + mv[15] * w;
+
+        // add 6 to z components because of translation
+        newNodes.push([newNode[0], newNode[1], newNode[2] + 6]);
+    });
+
+    const newObject = {
+        nodes: newNodes,
+        vertices: gl.object.vertices,
+    };
+
+    // Save to local files
+    var a = document.createElement("a");
+    var file = new Blob([JSON.stringify(newObject)], { type: "text/plain" });
+    a.href = URL.createObjectURL(file);
+    a.download = "model.json";
+    a.click();
 }
 
 /**
