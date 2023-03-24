@@ -424,7 +424,7 @@ function setAnimationMode(gl) {
 }
 
 // Object Transformations
-function setRotasiX() {
+function setRotasiX(gl) {
     let prevValue = rotasiXOutput.value;
     let currValue = rotasiX.value;
 
@@ -432,8 +432,10 @@ function setRotasiX() {
 
     console.log("Rotasi X:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setRotationX(currValue);
 }
-function setRotasiY() {
+function setRotasiY(gl) {
     let prevValue = rotasiYOutput.value;
     let currValue = rotasiY.value;
 
@@ -441,8 +443,10 @@ function setRotasiY() {
 
     console.log("Rotasi Y:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setRotationY(currValue);
 }
-function setRotasiZ() {
+function setRotasiZ(gl) {
     let prevValue = rotasiZOutput.value;
     let currValue = rotasiZ.value;
 
@@ -450,6 +454,8 @@ function setRotasiZ() {
 
     console.log("Rotasi Z:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setRotationZ(currValue);
 }
 
 function setTranslasiX() {

@@ -122,9 +122,9 @@ function initEventHandler(webgl) {
     save.addEventListener("click", () => {
         saveObject(webgl);
     });
-    rotasiX.addEventListener("input", setRotasiX);
-    rotasiY.addEventListener("input", setRotasiY);
-    rotasiZ.addEventListener("input", setRotasiZ);
+    rotasiX.addEventListener("input", () => setRotasiX(webgl));
+    rotasiY.addEventListener("input", () => setRotasiY(webgl));
+    rotasiZ.addEventListener("input", () => setRotasiZ(webgl));
     translasiX.addEventListener("input", setTranslasiX);
     translasiY.addEventListener("input", setTranslasiY);
     translasiZ.addEventListener("input", setTranslasiZ);

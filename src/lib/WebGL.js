@@ -36,6 +36,8 @@ export default class WebGL {
     /** @type {{projection: {ortho: {right: number, left: number, top: number, bottom: number}, pers: {fov: number, aspect: number}, obl: {thetaValue: number, phi: number}, zNear: number, zFar: number}}} */
     #constants
 
+    #rotation
+
     /**
      * Creates an instance of Drawer.
      * @param {(String|HTMLCanvasElement)} [canvas=null] Canvas element or its ID
@@ -127,6 +129,12 @@ export default class WebGL {
 
         this.#shadingMode = true;
         this.#animationMode = true;
+
+        this.#rotation = {
+            x : 0,
+            y : 0,
+            z : 0
+        }
     }
 
     // Getter: gl, program, programInfo, and buffer
@@ -247,6 +255,30 @@ export default class WebGL {
             modelViewMatrix, // matrix to translate
             [0.0, 0.0, -6.0]
         ); // amount to translate
+
+        // ROTATION MATRIX AROUND X
+        rotate(
+            modelViewMatrix, // destination matrix
+            modelViewMatrix, // matrix to rotate
+            this.#rotation.x * Math.PI / 180,
+            [1, 0, 0]
+        )
+
+        // ROTATION MATRIX AROUND Y
+        rotate(
+            modelViewMatrix, // destination matrix
+            modelViewMatrix, // matrix to rotate
+            this.#rotation.y * Math.PI / 180,
+            [0, 1, 0]
+        )
+
+        // ROTATION MATRIX AROUND Z
+        rotate(
+            modelViewMatrix, // destination matrix
+            modelViewMatrix, // matrix to rotate
+            this.#rotation.z * Math.PI / 180,
+            [0, 0, 1]
+        )
 
         if (this.#animationMode) {
             rotate(
@@ -474,5 +506,17 @@ export default class WebGL {
      */
     setAnimationMode(isAnimationMode) {
         this.#animationMode = isAnimationMode;
+    }
+
+    setRotationX(angle) {
+        this.#rotation.x = angle;
+    }
+
+    setRotationY(angle) {
+        this.#rotation.y = angle;
+    }
+
+    setRotationZ(angle) {
+        this.#rotation.z = angle;
     }
 }
