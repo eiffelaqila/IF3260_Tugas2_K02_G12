@@ -2,26 +2,26 @@
 import { toolbar } from "./toolbar.js";
 import { properties } from "./properties.js";
 import {
+    resetView,
     setShape,
     saveObject,
     loadObject,
-    setRotasiX,
-    setRotasiY,
-    setRotasiZ,
-    setTranslasiX,
-    setTranslasiY,
-    setTranslasiZ,
-    setScaleX,
-    setScaleY,
-    setScaleZ,
+    setObjRotationX,
+    setObjRotationY,
+    setObjRotationZ,
+    setObjTranslationX,
+    setObjTranslationY,
+    setObjTranslationZ,
+    setObjScaleX,
+    setObjScaleY,
+    setObjScaleZ,
     setProjectionType,
     setShadingMode,
     setAnimationMode,
-    resetView,
-    setRadius,
-    setAngleX,
-    setAngleY,
-    setAngleZ,
+    setCamRadius,
+    setCamRotationX,
+    setCamRotationY,
+    setCamRotationZ,
 } from "./utils.js";
 import WebGL from "../lib/WebGL.js";
 
@@ -101,20 +101,20 @@ function initEventHandler(webgl) {
     animation.addEventListener("click", () => setAnimationMode(webgl));
     load.addEventListener("change", () => loadObject(webgl));
     save.addEventListener("click", () => saveObject(webgl));
-    rotasiX.addEventListener("input", () => setRotasiX(webgl));
-    rotasiY.addEventListener("input", () => setRotasiY(webgl));
-    rotasiZ.addEventListener("input", () => setRotasiZ(webgl));
-    translasiX.addEventListener("input", () => setTranslasiX(webgl));
-    translasiY.addEventListener("input", () => setTranslasiY(webgl));
-    translasiZ.addEventListener("input", () => setTranslasiZ(webgl));
-    scaleX.addEventListener("input", () => setScaleX(webgl));
-    scaleY.addEventListener("input", () => setScaleY(webgl));
-    scaleZ.addEventListener("input", () => setScaleZ(webgl));
+    rotasiX.addEventListener("input", () => setObjRotationX(webgl));
+    rotasiY.addEventListener("input", () => setObjRotationY(webgl));
+    rotasiZ.addEventListener("input", () => setObjRotationZ(webgl));
+    translasiX.addEventListener("input", () => setObjTranslationX(webgl));
+    translasiY.addEventListener("input", () => setObjTranslationY(webgl));
+    translasiZ.addEventListener("input", () => setObjTranslationZ(webgl));
+    scaleX.addEventListener("input", () => setObjScaleX(webgl));
+    scaleY.addEventListener("input", () => setObjScaleY(webgl));
+    scaleZ.addEventListener("input", () => setObjScaleZ(webgl));
     resetview.addEventListener("click", () => resetView(webgl));
-    radius.addEventListener("input", () => setRadius(webgl));
-    angleX.addEventListener("input", () => setAngleX(webgl));
-    angleY.addEventListener("input", () => setAngleY(webgl));
-    angleZ.addEventListener("input", () => setAngleZ(webgl));
+    radius.addEventListener("input", () => setCamRadius(webgl));
+    angleX.addEventListener("input", () => setCamRotationX(webgl));
+    angleY.addEventListener("input", () => setCamRotationY(webgl));
+    angleZ.addEventListener("input", () => setCamRotationZ(webgl));
     help.addEventListener(
         "click",
         () => (window.location.href = "./help.html")
