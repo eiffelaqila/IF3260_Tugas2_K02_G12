@@ -318,6 +318,27 @@ export default class WebGL {
             [this.#translation.x, this.#translation.y, this.#translation.z]
         );
 
+        if (this.#animationMode) {
+            rotate(
+                modelMatrix, // destination matrix
+                modelMatrix, // matrix to rotate
+                cubeRotation * 0.5, // amount to rotate in radians
+                [0, 0, 1]
+            ); // axis to rotate around (Z)
+            rotate(
+                modelMatrix, // destination matrix
+                modelMatrix, // matrix to rotate
+                cubeRotation * 0.5, // amount to rotate in radians
+                [0, 1, 0]
+            ); // axis to rotate around (Y)
+            rotate(
+                modelMatrix, // destination matrix
+                modelMatrix, // matrix to rotate
+                cubeRotation * 0.5, // amount to rotate in radians
+                [1, 0, 0]
+            ); // axis to rotate around (X)
+        }
+
         // ROTATION MATRIX AROUND X
         rotate(
             modelMatrix, // destination matrix
@@ -349,26 +370,7 @@ export default class WebGL {
             [this.#scale.x, this.#scale.y, this.#scale.z]
         )
 
-        if (this.#animationMode) {
-            rotate(
-                modelMatrix, // destination matrix
-                modelMatrix, // matrix to rotate
-                cubeRotation * 0.5, // amount to rotate in radians
-                [0, 0, 1]
-            ); // axis to rotate around (Z)
-            rotate(
-                modelMatrix, // destination matrix
-                modelMatrix, // matrix to rotate
-                cubeRotation * 0.5, // amount to rotate in radians
-                [0, 1, 0]
-            ); // axis to rotate around (Y)
-            rotate(
-                modelMatrix, // destination matrix
-                modelMatrix, // matrix to rotate
-                cubeRotation * 0.5, // amount to rotate in radians
-                [1, 0, 0]
-            ); // axis to rotate around (X)
-        }
+        
 
         const modelViewMatrix = create();
         multiply(modelViewMatrix, viewMatrix, modelMatrix);
