@@ -428,25 +428,51 @@ function setShadingMode(gl) {
 
 // Reset View
 function resetView(gl) {
-    console.log("Reset view");
+    // Reset all rotation to 0
     rotasiX.value = 0;
     setRotasiX(gl);
     rotasiY.value = 0;
     setRotasiY(gl);
     rotasiZ.value = 0;
     setRotasiZ(gl);
+
+    // Reset all translation to 0
     translasiX.value = 0;
     setTranslasiX(gl);
     translasiY.value = 0;
     setTranslasiY(gl);
     translasiZ.value = 0;
     setTranslasiZ(gl);
-    scaleX.value = 0;
+    
+    // Reset all scale to 1
+    scaleX.value = 1;
     setScaleX(gl);
-    scaleY.value = 0;
+    scaleY.value = 1;
     setScaleY(gl);
-    scaleZ.value = 0;
+    scaleZ.value = 1;
     setScaleZ(gl);
+    
+    // Reset radius to 200
+    radius.value = 200;
+    setRadius(gl);
+    
+    // Reset all camera angle to 0
+    angleX.value = 0;
+    setAngleX(gl);
+    angleY.value = 0;
+    setAngleY(gl);
+    angleZ.value = 0;
+    setAngleZ(gl);
+
+    // Toggle on shading and animation
+    shading.innerText = SHADING_OFF_TEXT;
+    setShadingMode(gl);
+    animation.innerText = ANIMATION_ON_TEXT;
+    setAnimationMode(gl);
+
+    // Change projjection to orthographic
+    projection.value = "orth";
+    setProjectionType(gl);
 }
 
 // Animation
@@ -535,7 +561,7 @@ function setTranslasiZ(gl) {
     gl.setTranslationZ(currValue);
 }
 
-function setScaleX() {
+function setScaleX(gl) {
     let prevValue = scaleXOutput.value;
     let currValue = scaleX.value;
 
@@ -543,8 +569,10 @@ function setScaleX() {
 
     console.log("Scale X:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+    
+    gl.setScaleX(currValue);
 }
-function setScaleY() {
+function setScaleY(gl) {
     let prevValue = scaleYOutput.value;
     let currValue = scaleY.value;
 
@@ -552,8 +580,10 @@ function setScaleY() {
 
     console.log("Scale Y:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setScaleY(currValue);
 }
-function setScaleZ() {
+function setScaleZ(gl) {
     let prevValue = scaleZOutput.value;
     let currValue = scaleZ.value;
 
@@ -561,6 +591,8 @@ function setScaleZ() {
 
     console.log("Scale Z:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setScaleZ(currValue);
 }
 
 // Camera Configurations

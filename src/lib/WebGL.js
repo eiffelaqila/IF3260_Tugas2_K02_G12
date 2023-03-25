@@ -9,6 +9,7 @@ import {
     mat4,
     lookAt,
     multiply,
+    scale,
 } from "./Mat4.js";
 import { parseHollowObject } from "./object/HollowObject.js";
 
@@ -41,6 +42,7 @@ export default class WebGL {
 
     #rotation;
     #translation;
+    #scale;
 
     #modelViewMatrix;
     #object;
@@ -146,7 +148,7 @@ export default class WebGL {
         this.setProjectionMatrices();
 
         this.#shadingMode = true;
-        this.#animationMode = true;
+        this.#animationMode = false;
 
         this.#rotation = {
             x: 0,
@@ -158,6 +160,12 @@ export default class WebGL {
             x: 0,
             y: 0,
             z: 0,
+        };
+
+        this.#scale = {
+            x: 1,
+            y: 1,
+            z: 1,
         };
     }
 
@@ -302,6 +310,13 @@ export default class WebGL {
         // Set the drawing position to the "identity" point, which is
         // the center of the scene.
         const modelMatrix = create();
+        
+        // SCALING MATRIX
+        scale(
+            modelMatrix,
+            modelMatrix,
+            [this.#scale.x, this.#scale.y, this.#scale.z]
+        )
 
         // TRANSLATION MATRIX AROUND X
         translate(
@@ -608,5 +623,17 @@ export default class WebGL {
 
     setAngleZ(angleZ) {
         this.#angleZ = angleZ;
+    }
+
+    setScaleX(x) {
+        this.#scale.x = x;
+    }
+
+    setScaleY(y) {
+        this.#scale.y = y;
+    }
+
+    setScaleZ(z) {
+        this.#scale.z = z;
     }
 }
