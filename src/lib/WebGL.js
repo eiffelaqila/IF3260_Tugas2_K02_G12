@@ -56,9 +56,6 @@ export default class WebGL {
     #camRadius;
     /** @type {x: number, y: number, z: number} Camera rotation parameters */
     #camRotationAngle;
-    #angleX;
-    #angleY;
-    #angleZ;
 
     /**
      * Creates an instance of Drawer.

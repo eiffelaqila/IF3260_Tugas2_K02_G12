@@ -164,39 +164,39 @@ function setShadingMode(gl) {
 function resetView(gl) {
     // Reset all rotation to 0
     rotasiX.value = 0;
-    setRotasiX(gl);
+    setObjRotationX(gl);
     rotasiY.value = 0;
-    setRotasiY(gl);
+    setObjRotationY(gl);
     rotasiZ.value = 0;
-    setRotasiZ(gl);
+    setObjRotationZ(gl);
 
     // Reset all translation to 0
     translasiX.value = 0;
-    setTranslasiX(gl);
+    setObjTranslationX(gl);
     translasiY.value = 0;
-    setTranslasiY(gl);
+    setObjTranslationY(gl);
     translasiZ.value = 0;
-    setTranslasiZ(gl);
+    setObjTranslationZ(gl);
 
     // Reset all scale to 1
     scaleX.value = 1;
-    setScaleX(gl);
+    setObjScaleX(gl);
     scaleY.value = 1;
-    setScaleY(gl);
+    setObjScaleY(gl);
     scaleZ.value = 1;
-    setScaleZ(gl);
+    setObjScaleZ(gl);
 
     // Reset radius to 200
     radius.value = 200;
-    setRadius(gl);
+    setCamRadius(gl);
 
     // Reset all camera angle to 0
     angleX.value = 0;
-    setAngleX(gl);
+    setCamRotationX(gl);
     angleY.value = 0;
-    setAngleY(gl);
+    setCamRotationY(gl);
     angleZ.value = 0;
-    setAngleZ(gl);
+    setCamRotationZ(gl);
 
     // Toggle on shading and animation
     shading.innerText = SHADING_OFF_TEXT;
