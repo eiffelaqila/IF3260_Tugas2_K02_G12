@@ -310,13 +310,6 @@ export default class WebGL {
         // Set the drawing position to the "identity" point, which is
         // the center of the scene.
         const modelMatrix = create();
-        
-        // SCALING MATRIX
-        scale(
-            modelMatrix,
-            modelMatrix,
-            [this.#scale.x, this.#scale.y, this.#scale.z]
-        )
 
         // TRANSLATION MATRIX AROUND X
         translate(
@@ -348,6 +341,13 @@ export default class WebGL {
             (this.#rotation.z * Math.PI) / 180,
             [0, 0, 1]
         );
+
+        // SCALING MATRIX
+        scale(
+            modelMatrix,
+            modelMatrix,
+            [this.#scale.x, this.#scale.y, this.#scale.z]
+        )
 
         if (this.#animationMode) {
             rotate(
