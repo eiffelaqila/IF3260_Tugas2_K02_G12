@@ -493,7 +493,7 @@ function setAnimationMode(gl) {
 }
 
 // Object Transformations
-function setRotasiX(gl) {
+function setObjRotationX(gl) {
     let prevValue = rotasiXOutput.value;
     let currValue = rotasiX.value;
 
@@ -502,9 +502,9 @@ function setRotasiX(gl) {
     console.log("Rotasi X:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setRotationX(currValue);
+    gl.setObjRotationX(currValue);
 }
-function setRotasiY(gl) {
+function setObjRotationY(gl) {
     let prevValue = rotasiYOutput.value;
     let currValue = rotasiY.value;
 
@@ -513,9 +513,9 @@ function setRotasiY(gl) {
     console.log("Rotasi Y:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setRotationY(currValue);
+    gl.setObjRotationY(currValue);
 }
-function setRotasiZ(gl) {
+function setObjRotationZ(gl) {
     let prevValue = rotasiZOutput.value;
     let currValue = rotasiZ.value;
 
@@ -524,10 +524,10 @@ function setRotasiZ(gl) {
     console.log("Rotasi Z:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setRotationZ(currValue);
+    gl.setObjRotationZ(currValue);
 }
 
-function setTranslasiX(gl) {
+function setObjTranslationX(gl) {
     let prevValue = translasiXOutput.value;
     let currValue = translasiX.value;
 
@@ -536,9 +536,9 @@ function setTranslasiX(gl) {
     console.log("Translasi X:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setTranslationX(currValue);
+    gl.setObjTranslationX(currValue);
 }
-function setTranslasiY(gl) {
+function setObjTranslationY(gl) {
     let prevValue = translasiYOutput.value;
     let currValue = translasiY.value;
 
@@ -547,9 +547,9 @@ function setTranslasiY(gl) {
     console.log("Translasi Y:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setTranslationY(currValue);
+    gl.setObjTranslationY(currValue);
 }
-function setTranslasiZ(gl) {
+function setObjTranslationZ(gl) {
     let prevValue = translasiZOutput.value;
     let currValue = translasiZ.value;
 
@@ -558,10 +558,10 @@ function setTranslasiZ(gl) {
     console.log("Translasi Z:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setTranslationZ(currValue);
+    gl.setObjTranslationZ(currValue);
 }
 
-function setScaleX(gl) {
+function setObjScaleX(gl) {
     let prevValue = scaleXOutput.value;
     let currValue = scaleX.value;
 
@@ -570,9 +570,9 @@ function setScaleX(gl) {
     console.log("Scale X:", currValue);
     console.log("Value change difference:", currValue - prevValue);
     
-    gl.setScaleX(currValue);
+    gl.setObjScaleX(currValue);
 }
-function setScaleY(gl) {
+function setObjScaleY(gl) {
     let prevValue = scaleYOutput.value;
     let currValue = scaleY.value;
 
@@ -581,9 +581,9 @@ function setScaleY(gl) {
     console.log("Scale Y:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setScaleY(currValue);
+    gl.setObjScaleY(currValue);
 }
-function setScaleZ(gl) {
+function setObjScaleZ(gl) {
     let prevValue = scaleZOutput.value;
     let currValue = scaleZ.value;
 
@@ -592,11 +592,11 @@ function setScaleZ(gl) {
     console.log("Scale Z:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setScaleZ(currValue);
+    gl.setObjScaleZ(currValue);
 }
 
 // Camera Configurations
-function setRadius(gl) {
+function setCamRadius(gl) {
     let prevValue = radiusOutput.value;
     let currValue = radius.value;
 
@@ -605,9 +605,9 @@ function setRadius(gl) {
     console.log("Radius:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setRadius(currValue);
+    gl.setCamRadius(currValue);
 }
-function setAngleX(gl) {
+function setCamRotationX(gl) {
     let prevValue = angleXOutput.value;
     let currValue = angleX.value;
 
@@ -616,9 +616,9 @@ function setAngleX(gl) {
     console.log("AngleX:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setAngleX(currValue);
+    gl.setCamRotationX(currValue);
 }
-function setAngleY(gl) {
+function setCamRotationY(gl) {
     let prevValue = angleYOutput.value;
     let currValue = angleY.value;
 
@@ -627,9 +627,9 @@ function setAngleY(gl) {
     console.log("AngleY:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setAngleY(currValue);
+    gl.setCamRotationY(currValue);
 }
-function setAngleZ(gl) {
+function setCamRotationZ(gl) {
     let prevValue = angleZOutput.value;
     let currValue = angleZ.value;
 
@@ -638,29 +638,29 @@ function setAngleZ(gl) {
     console.log("AngleZ:", currValue);
     console.log("Value change difference:", currValue - prevValue);
 
-    gl.setAngleZ(currValue);
+    gl.setCamRotationZ(currValue);
 }
 
 export {
+    resetView,
     sampleShape,
     setShape,
     saveObject,
     loadObject,
-    setRotasiX,
-    setRotasiY,
-    setRotasiZ,
-    setTranslasiX,
-    setTranslasiY,
-    setTranslasiZ,
-    setScaleX,
-    setScaleY,
-    setScaleZ,
+    setObjRotationX,
+    setObjRotationY,
+    setObjRotationZ,
+    setObjTranslationX,
+    setObjTranslationY,
+    setObjTranslationZ,
+    setObjScaleX,
+    setObjScaleY,
+    setObjScaleZ,
     setProjectionType,
     setShadingMode,
-    resetView,
     setAnimationMode,
-    setRadius,
-    setAngleX,
-    setAngleY,
-    setAngleZ,
+    setCamRadius,
+    setCamRotationX,
+    setCamRotationY,
+    setCamRotationZ,
 };

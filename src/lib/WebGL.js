@@ -26,7 +26,6 @@ export default class WebGL {
     #parsedObject;
     /** @type {"orth" | "pers" | "obl"} Projection type identifier */
     #projectionType;
-    /** @type {boolean} Shading mode identifier whether enabled or not */
     /** @type {Array<number>} Orthogonal projection matrix */
     #orthProjMatrix;
     /** @type {Array<number>} Perspective projection matrix */
@@ -40,13 +39,23 @@ export default class WebGL {
     /** @type {{projection: {ortho: {right: number, left: number, top: number, bottom: number}, pers: {fov: number, aspect: number}, obl: {thetaValue: number, phi: number}, zNear: number, zFar: number}}} */
     #constants;
 
-    #rotation;
-    #translation;
-    #scale;
+    /** @type {x: number, y: number, z: number} Object rotation parameters */
+    #objRotationAngle;
+    /** @type {x: number, y: number, z: number} Object translation parameters */
+    #objTranslation;
+    /** @type {x: number, y: number, z: number} Object scale parameters */
+    #objScale;
 
+    /** @type {mat4} Model view matrix in mat4 */
     #modelViewMatrix;
+
+    /** @type {Object} Object to be drawn */
     #object;
-    #radius;
+
+    /** @type {number} Camera radius */
+    #camRadius;
+    /** @type {x: number, y: number, z: number} Camera rotation parameters */
+    #camRotationAngle;
     #angleX;
     #angleY;
     #angleZ;
@@ -79,10 +88,29 @@ export default class WebGL {
         this.#buffer = [];
         this.#parsedObject = null;
         this.#modelViewMatrix = null;
-        this.#angleX = 0;
-        this.#angleY = 0;
-        this.#angleZ = 0;
-        this.#radius = 200;
+        this.#camRadius = 200;
+        this.#camRotationAngle = {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+        this.#objRotationAngle = {
+            x: 0,
+            y: 0,
+            z: 0,
+        };
+
+        this.#objTranslation = {
+            x: 0,
+            y: 0,
+            z: 0,
+        };
+
+        this.#objScale = {
+            x: 1,
+            y: 1,
+            z: 1,
+        };
 
         // Program informations: program, attributes, and uniform locations
         this.#programInfo = {
@@ -149,27 +177,16 @@ export default class WebGL {
 
         this.#shadingMode = true;
         this.#animationMode = false;
-
-        this.#rotation = {
-            x: 0,
-            y: 0,
-            z: 0,
-        };
-
-        this.#translation = {
-            x: 0,
-            y: 0,
-            z: 0,
-        };
-
-        this.#scale = {
-            x: 1,
-            y: 1,
-            z: 1,
-        };
     }
 
-    // Getter: gl, program, programInfo, and buffer
+    // Getter: 
+    // - WebGL Class (gl)
+    // - WebGL Program (program)
+    // - WebGL Program Info (programInfo)
+    // - WebGL Buffer (WebGLBuffer)
+    // - Parsed Object (Object)
+    // - Model View Matrix (mat4)
+    // - Object to be drawn (Object)
     get gl() {
         return this.#gl;
     }
@@ -190,6 +207,116 @@ export default class WebGL {
     }
     get object() {
         return this.#object;
+    }
+
+    // Setter:
+    // - Object rotation (theta_x, theta_y, theta_z) in radians
+    // - Object translation (dist_x, dist_y, dist_z)
+    // - Object scaling (x, y, z) in scalar
+    // - Camera radius
+    // - Camera rotation (theta_x, theta_y, theta_z) in radians
+    /**
+     * Set object rotation angle to X-axis
+     * @param {number} theta Angle in radians
+     */
+    setObjRotationX(theta) {
+        this.#objRotationAngle.x = theta;
+    }
+
+    /**
+     * Set object rotation angle to Y-axis
+     * @param {number} theta Angle in radians
+     */
+    setObjRotationY(theta) {
+        this.#objRotationAngle.y = theta;
+    }
+
+    /**
+     * Set object rotation angle to Z-axis
+     * @param {number} theta Angle in radians
+     */
+    setObjRotationZ(theta) {
+        this.#objRotationAngle.z = theta;
+    }
+
+    /**
+     * Set object translation distance with respect to X-axis
+     * @param {number} dist Distance units
+     */
+    setObjTranslationX(dist) {
+        this.#objTranslation.x = dist;
+    }
+
+    /**
+     * Set object translation distance with respect to Y-axis
+     * @param {number} dist Distance units
+     */
+    setObjTranslationY(dist) {
+        this.#objTranslation.y = dist;
+    }
+
+    /**
+     * Set object translation distance with respect to Z-axis
+     * @param {number} dist Distance units
+     */
+    setObjTranslationZ(dist) {
+        this.#objTranslation.z = dist;
+    }
+
+    /**
+     * Set object scale with respect to x-value in coordinate
+     * @param {number} x Scale factor
+     */
+    setObjScaleX(x) {
+        this.#objScale.x = x;
+    }
+
+    /**
+     * Set object scale with respect to y-value in coordinate
+     * @param {number} y Scale factor
+     */
+    setObjScaleY(y) {
+        this.#objScale.y = y;
+    }
+
+    /**
+     * Set object scale with respect to z-value in coordinate
+     * @param {number} z Scale factor
+     */
+    setObjScaleZ(z) {
+        this.#objScale.z = z;
+    }
+
+    /**
+     * Set camera radius
+     * @param {number} radius Camera radius
+     */
+    setCamRadius(radius) {
+        this.#camRadius = radius;
+    }
+
+    /**
+     * Set camera rotation angle to X-axis
+     * @param {number} theta Angle in radians
+     */
+    setCamRotationX(theta) {
+        this.#camRotationAngle.x = theta;
+    }
+
+    /**
+     * Set camera rotation angle to Y-axis
+     * @param {number} theta Angle in radians
+     */
+    setCamRotationY(theta) {
+        this.#camRotationAngle.y = theta;
+    }
+
+    /**
+     * Set camera rotation angle to Z-axis
+     * @param {number} theta Angle in radians
+     */
+    setCamRotationZ(theta) {
+        this.#camRotationAngle.z = theta;
     }
 
     /**
@@ -282,7 +409,7 @@ export default class WebGL {
         const viewMatrix = create();
         lookAt(
             viewMatrix,
-            [0.0, 0.0, this.#radius * 1.5],
+            [0.0, 0.0, this.#camRadius * 1.5],
             [0.0, 0.0, 0.0],
             [0.0, 1.0, 0.0]
         );
@@ -291,19 +418,19 @@ export default class WebGL {
         rotate(
             viewMatrix, // destination matrix
             viewMatrix, // matrix to rotate
-            (this.#angleX * Math.PI) / 180,
+            (this.#camRotationAngle.x * Math.PI) / 180,
             [1.0, 0.0, 0.0]
         );
         rotate(
             viewMatrix, // destination matrix
             viewMatrix, // matrix to rotate
-            (this.#angleY * Math.PI) / 180,
+            (this.#camRotationAngle.y * Math.PI) / 180,
             [0.0, 1.0, 0.0]
         );
         rotate(
             viewMatrix, // destination matrix
             viewMatrix, // matrix to rotate
-            (this.#angleZ * Math.PI) / 180,
+            (this.#camRotationAngle.z * Math.PI) / 180,
             [0.0, 0.0, 1.0]
         );
 
@@ -315,7 +442,7 @@ export default class WebGL {
         translate(
             modelMatrix, // destination matrix
             modelMatrix, // matrix to translate
-            [this.#translation.x, this.#translation.y, this.#translation.z]
+            [this.#objTranslation.x, this.#objTranslation.y, this.#objTranslation.z]
         );
 
         if (this.#animationMode) {
@@ -343,7 +470,7 @@ export default class WebGL {
         rotate(
             modelMatrix, // destination matrix
             modelMatrix, // matrix to rotate
-            (this.#rotation.x * Math.PI) / 180,
+            (this.#objRotationAngle.x * Math.PI) / 180,
             [1, 0, 0]
         );
 
@@ -351,7 +478,7 @@ export default class WebGL {
         rotate(
             modelMatrix, // destination matrix
             modelMatrix, // matrix to rotate
-            (this.#rotation.y * Math.PI) / 180,
+            (this.#objRotationAngle.y * Math.PI) / 180,
             [0, 1, 0]
         );
 
@@ -359,7 +486,7 @@ export default class WebGL {
         rotate(
             modelMatrix, // destination matrix
             modelMatrix, // matrix to rotate
-            (this.#rotation.z * Math.PI) / 180,
+            (this.#objRotationAngle.z * Math.PI) / 180,
             [0, 0, 1]
         );
 
@@ -367,7 +494,7 @@ export default class WebGL {
         scale(
             modelMatrix,
             modelMatrix,
-            [this.#scale.x, this.#scale.y, this.#scale.z]
+            [this.#objScale.x, this.#objScale.y, this.#objScale.z]
         )
 
         
@@ -585,57 +712,5 @@ export default class WebGL {
      */
     setAnimationMode(isAnimationMode) {
         this.#animationMode = isAnimationMode;
-    }
-
-    setRotationX(angle) {
-        this.#rotation.x = angle;
-    }
-
-    setRotationY(angle) {
-        this.#rotation.y = angle;
-    }
-
-    setRotationZ(angle) {
-        this.#rotation.z = angle;
-    }
-
-    setTranslationX(dist) {
-        this.#translation.x = dist;
-    }
-
-    setTranslationY(dist) {
-        this.#translation.y = dist;
-    }
-
-    setTranslationZ(dist) {
-        this.#translation.z = dist;
-    }
-
-    setRadius(radius) {
-        this.#radius = radius;
-    }
-
-    setAngleX(angleX) {
-        this.#angleX = angleX;
-    }
-
-    setAngleY(angleY) {
-        this.#angleY = angleY;
-    }
-
-    setAngleZ(angleZ) {
-        this.#angleZ = angleZ;
-    }
-
-    setScaleX(x) {
-        this.#scale.x = x;
-    }
-
-    setScaleY(y) {
-        this.#scale.y = y;
-    }
-
-    setScaleZ(z) {
-        this.#scale.z = z;
     }
 }
