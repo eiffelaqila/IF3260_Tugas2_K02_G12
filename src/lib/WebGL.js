@@ -1,6 +1,15 @@
 import { DefaultFragCode, DefaultVertCode } from "./shaders/DefaultShaders.js";
 import { initBuffers } from "../lib/Buffers.js";
-import { create, translate, rotate, invert, transpose, mat4 } from "./Mat4.js";
+import {
+    create,
+    translate,
+    rotate,
+    invert,
+    transpose,
+    mat4,
+    lookAt,
+    multiply,
+} from "./Mat4.js";
 import { parseHollowObject } from "./object/HollowObject.js";
 
 export default class WebGL {
@@ -23,6 +32,7 @@ export default class WebGL {
     #persProjMatrix;
     /** @type {Array<number>} Oblique projection matrix */
     #oblProjMatrix;
+    /** @type {boolean} Shading mode identifier whether enabled or not */
     #shadingMode;
     /** @type {boolean} Animation mode identifier whether enabled or not */
     #animationMode;
@@ -31,8 +41,13 @@ export default class WebGL {
 
     #rotation;
     #translation;
+
     #modelViewMatrix;
     #object;
+    #radius;
+    #angleX;
+    #angleY;
+    #angleZ;
 
     /**
      * Creates an instance of Drawer.
@@ -62,6 +77,10 @@ export default class WebGL {
         this.#buffer = [];
         this.#parsedObject = null;
         this.#modelViewMatrix = null;
+        this.#angleX = 0;
+        this.#angleY = 0;
+        this.#angleZ = 0;
+        this.#radius = 200;
 
         // Program informations: program, attributes, and uniform locations
         this.#programInfo = {
@@ -118,8 +137,8 @@ export default class WebGL {
                     thetaValue: 45,
                     phi: 45,
                 },
-                zNear: 0.1,
-                zFar: 100,
+                zNear: 1,
+                zFar: 1000,
             },
         };
 
@@ -251,74 +270,93 @@ export default class WebGL {
      * @param {WebGL} webgl
      */
     drawScene(webgl, buffer, vCount, cubeRotation) {
-        // console.log(webgl.parsedObject.positions);
-        // Clear canvas
-        // webgl.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        // webgl.gl.clearDepth(1.0);
+        // Compute camera matrix
+        const viewMatrix = create();
+        lookAt(
+            viewMatrix,
+            [0.0, 0.0, this.#radius * 1.5],
+            [0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0]
+        );
+
+        // ROTATION MATRIX AROUND Y
+        rotate(
+            viewMatrix, // destination matrix
+            viewMatrix, // matrix to rotate
+            (this.#angleX * Math.PI) / 180,
+            [1.0, 0.0, 0.0]
+        );
+        rotate(
+            viewMatrix, // destination matrix
+            viewMatrix, // matrix to rotate
+            (this.#angleY * Math.PI) / 180,
+            [0.0, 1.0, 0.0]
+        );
+        rotate(
+            viewMatrix, // destination matrix
+            viewMatrix, // matrix to rotate
+            (this.#angleZ * Math.PI) / 180,
+            [0.0, 0.0, 1.0]
+        );
 
         // Set the drawing position to the "identity" point, which is
         // the center of the scene.
-        const modelViewMatrix = create();
+        const modelMatrix = create();
 
-        // Now move the drawing position a bit to where we want to
-        // start drawing the square.
+        // TRANSLATION MATRIX AROUND X
         translate(
-            modelViewMatrix, // destination matrix
-            modelViewMatrix, // matrix to translate
-            [0.0, 0.0, -6.0]
-        ); // amount to translate
+            modelMatrix, // destination matrix
+            modelMatrix, // matrix to translate
+            [this.#translation.x, this.#translation.y, this.#translation.z]
+        );
 
         // ROTATION MATRIX AROUND X
         rotate(
-            modelViewMatrix, // destination matrix
-            modelViewMatrix, // matrix to rotate
+            modelMatrix, // destination matrix
+            modelMatrix, // matrix to rotate
             (this.#rotation.x * Math.PI) / 180,
             [1, 0, 0]
         );
 
         // ROTATION MATRIX AROUND Y
         rotate(
-            modelViewMatrix, // destination matrix
-            modelViewMatrix, // matrix to rotate
+            modelMatrix, // destination matrix
+            modelMatrix, // matrix to rotate
             (this.#rotation.y * Math.PI) / 180,
             [0, 1, 0]
         );
 
         // ROTATION MATRIX AROUND Z
         rotate(
-            modelViewMatrix, // destination matrix
-            modelViewMatrix, // matrix to rotate
+            modelMatrix, // destination matrix
+            modelMatrix, // matrix to rotate
             (this.#rotation.z * Math.PI) / 180,
             [0, 0, 1]
         );
 
-        // TRANSLATION MATRIX AROUND X
-        translate(
-            modelViewMatrix, // destination matrix
-            modelViewMatrix, // matrix to translate
-            [this.#translation.x, this.#translation.y, this.#translation.z]
-        );
-
         if (this.#animationMode) {
             rotate(
-                modelViewMatrix, // destination matrix
-                modelViewMatrix, // matrix to rotate
+                modelMatrix, // destination matrix
+                modelMatrix, // matrix to rotate
                 cubeRotation * 0.5, // amount to rotate in radians
                 [0, 0, 1]
             ); // axis to rotate around (Z)
             rotate(
-                modelViewMatrix, // destination matrix
-                modelViewMatrix, // matrix to rotate
+                modelMatrix, // destination matrix
+                modelMatrix, // matrix to rotate
                 cubeRotation * 0.5, // amount to rotate in radians
                 [0, 1, 0]
             ); // axis to rotate around (Y)
             rotate(
-                modelViewMatrix, // destination matrix
-                modelViewMatrix, // matrix to rotate
+                modelMatrix, // destination matrix
+                modelMatrix, // matrix to rotate
                 cubeRotation * 0.5, // amount to rotate in radians
                 [1, 0, 0]
             ); // axis to rotate around (X)
         }
+
+        const modelViewMatrix = create();
+        multiply(modelViewMatrix, viewMatrix, modelMatrix);
 
         this.#modelViewMatrix = modelViewMatrix;
 
@@ -554,5 +592,21 @@ export default class WebGL {
 
     setTranslationZ(dist) {
         this.#translation.z = dist;
+    }
+
+    setRadius(radius) {
+        this.#radius = radius;
+    }
+
+    setAngleX(angleX) {
+        this.#angleX = angleX;
+    }
+
+    setAngleY(angleY) {
+        this.#angleY = angleY;
+    }
+
+    setAngleZ(angleZ) {
+        this.#angleZ = angleZ;
     }
 }

@@ -13,15 +13,10 @@ const scaleXOutput = document.getElementById("scaleX-output");
 const scaleYOutput = document.getElementById("scaleY-output");
 const scaleZOutput = document.getElementById("scaleZ-output");
 
-const eyeXOutput = document.getElementById("eyeX-output");
-const eyeYOutput = document.getElementById("eyeY-output");
-const eyeZOutput = document.getElementById("eyeZ-output");
-const centerXOutput = document.getElementById("centerX-output");
-const centerYOutput = document.getElementById("centerY-output");
-const centerZOutput = document.getElementById("centerZ-output");
-const upXOutput = document.getElementById("upX-output");
-const upYOutput = document.getElementById("upY-output");
-const upZOutput = document.getElementById("upZ-output");
+const radiusOutput = document.getElementById("radius-output");
+const angleXOutput = document.getElementById("angleX-output");
+const angleYOutput = document.getElementById("angleY-output");
+const angleZOutput = document.getElementById("angleZ-output");
 
 const SHADING_ON_TEXT = "Shading (ON)";
 const SHADING_ON_BG_COLOR = "rgb(0, 255, 0)";
@@ -569,86 +564,49 @@ function setScaleZ() {
 }
 
 // Camera Configurations
-function setEyeX() {
-    let prevValue = eyeXOutput.value;
-    let currValue = eyeX.value;
+function setRadius(gl) {
+    let prevValue = radiusOutput.value;
+    let currValue = radius.value;
 
-    eyeXOutput.value = eyeX.value;
+    radiusOutput.value = radius.value;
 
-    console.log("Eye X:", currValue);
+    console.log("Radius:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setRadius(currValue);
 }
-function setEyeY() {
-    let prevValue = eyeYOutput.value;
-    let currValue = eyeY.value;
+function setAngleX(gl) {
+    let prevValue = angleXOutput.value;
+    let currValue = angleX.value;
 
-    eyeYOutput.value = eyeY.value;
+    angleXOutput.value = angleX.value;
 
-    console.log("Eye Y:", currValue);
+    console.log("AngleX:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setAngleX(currValue);
 }
-function setEyeZ() {
-    let prevValue = eyeZOutput.value;
-    let currValue = eyeZ.value;
+function setAngleY(gl) {
+    let prevValue = angleYOutput.value;
+    let currValue = angleY.value;
 
-    eyeZOutput.value = eyeZ.value;
+    angleYOutput.value = angleY.value;
 
-    console.log("Eye Z:", currValue);
+    console.log("AngleY:", currValue);
     console.log("Value change difference:", currValue - prevValue);
+
+    gl.setAngleY(currValue);
 }
-function setCenterX() {
-    let prevValue = centerXOutput.value;
-    let currValue = centerX.value;
+function setAngleZ(gl) {
+    let prevValue = angleZOutput.value;
+    let currValue = angleZ.value;
 
-    centerXOutput.value = centerX.value;
+    angleZOutput.value = angleZ.value;
 
-    console.log("Center X:", currValue);
+    console.log("AngleZ:", currValue);
     console.log("Value change difference:", currValue - prevValue);
-}
-function setCenterY() {
-    let prevValue = centerYOutput.value;
-    let currValue = centerY.value;
 
-    centerYOutput.value = centerY.value;
-
-    console.log("Center Y:", currValue);
-    console.log("Value change difference:", currValue - prevValue);
-}
-function setCenterZ() {
-    let prevValue = centerZOutput.value;
-    let currValue = centerZ.value;
-
-    centerZOutput.value = centerZ.value;
-
-    console.log("Center Z:", currValue);
-    console.log("Value change difference:", currValue - prevValue);
-}
-function setUpX() {
-    let prevValue = upXOutput.value;
-    let currValue = upX.value;
-
-    upXOutput.value = upX.value;
-
-    console.log("Up X:", currValue);
-    console.log("Value change difference:", currValue - prevValue);
-}
-function setUpY() {
-    let prevValue = upYOutput.value;
-    let currValue = upY.value;
-
-    upYOutput.value = upY.value;
-
-    console.log("Up Y:", currValue);
-    console.log("Value change difference:", currValue - prevValue);
-}
-function setUpZ() {
-    let prevValue = upZOutput.value;
-    let currValue = upZ.value;
-
-    upZOutput.value = upZ.value;
-
-    console.log("Up Z:", currValue);
-    console.log("Value change difference:", currValue - prevValue);
+    gl.setAngleZ(currValue);
 }
 
 export {
@@ -669,13 +627,8 @@ export {
     setShadingMode,
     resetView,
     setAnimationMode,
-    setEyeX,
-    setEyeY,
-    setEyeZ,
-    setCenterX,
-    setCenterY,
-    setCenterZ,
-    setUpX,
-    setUpY,
-    setUpZ,
+    setRadius,
+    setAngleX,
+    setAngleY,
+    setAngleZ,
 };

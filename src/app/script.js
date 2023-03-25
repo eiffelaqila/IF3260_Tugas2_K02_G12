@@ -18,15 +18,10 @@ import {
     setShadingMode,
     setAnimationMode,
     resetView,
-    setEyeX,
-    setEyeY,
-    setEyeZ,
-    setCenterX,
-    setCenterY,
-    setCenterZ,
-    setUpX,
-    setUpY,
-    setUpZ,
+    setRadius,
+    setAngleX,
+    setAngleY,
+    setAngleZ,
 } from "./utils.js";
 import WebGL from "../lib/WebGL.js";
 
@@ -50,15 +45,10 @@ const projection = document.getElementById("projection");
 const shading = document.getElementById("shading");
 const animation = document.getElementById("animation");
 const resetview = document.getElementById("resetview");
-const eyeX = document.getElementById("eyeX");
-const eyeY = document.getElementById("eyeY");
-const eyeZ = document.getElementById("eyeZ");
-const centerX = document.getElementById("centerX");
-const centerY = document.getElementById("centerY");
-const centerZ = document.getElementById("centerZ");
-const upX = document.getElementById("upX");
-const upY = document.getElementById("upY");
-const upZ = document.getElementById("upZ");
+const radius = document.getElementById("radius");
+const angleX = document.getElementById("angleX");
+const angleY = document.getElementById("angleY");
+const angleZ = document.getElementById("angleZ");
 
 main();
 
@@ -120,13 +110,8 @@ function initEventHandler(webgl) {
     scaleY.addEventListener("input", setScaleY);
     scaleZ.addEventListener("input", setScaleZ);
     resetview.addEventListener("click", () => resetView(webgl));
-    eyeX.addEventListener("input", setEyeX);
-    eyeY.addEventListener("input", setEyeY);
-    eyeZ.addEventListener("input", setEyeZ);
-    centerX.addEventListener("input", setCenterX);
-    centerY.addEventListener("input", setCenterY);
-    centerZ.addEventListener("input", setCenterZ);
-    upX.addEventListener("input", setUpX);
-    upY.addEventListener("input", setUpY);
-    upZ.addEventListener("input", setUpZ);
+    radius.addEventListener("input", () => setRadius(webgl));
+    angleX.addEventListener("input", () => setAngleX(webgl));
+    angleY.addEventListener("input", () => setAngleY(webgl));
+    angleZ.addEventListener("input", () => setAngleZ(webgl));
 }
