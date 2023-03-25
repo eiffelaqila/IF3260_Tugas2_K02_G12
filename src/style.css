@@ -156,6 +156,10 @@ canvas {
     color: black;
 }
 
+#help {
+    background-color: yellow
+}
+
 .button-input {
     font-weight: bold;
     padding: 0.5rem 0rem 0.5rem 0rem;

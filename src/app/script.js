@@ -32,6 +32,7 @@ let deltaTime = 0;
 const shape = document.getElementById("shape");
 const load = document.getElementById("load");
 const save = document.getElementById("save");
+const help = document.getElementById("help");
 const rotasiX = document.getElementById("rotasiX");
 const rotasiY = document.getElementById("rotasiY");
 const rotasiZ = document.getElementById("rotasiZ");
@@ -114,4 +115,8 @@ function initEventHandler(webgl) {
     angleX.addEventListener("input", () => setAngleX(webgl));
     angleY.addEventListener("input", () => setAngleY(webgl));
     angleZ.addEventListener("input", () => setAngleZ(webgl));
+    help.addEventListener(
+        "click",
+        () => (window.location.href = "./help.html")
+    );
 }
